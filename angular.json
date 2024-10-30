@@ -97,8 +97,18 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "version": 2,
+            "browserTarget": "little-games:build:production"
+          }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

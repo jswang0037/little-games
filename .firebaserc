@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "little-games-a78c1": {
+      "hosting": {
+        "little-games": [
+          "little-games-a78c1"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "little-games-a78c1"
+  }
+}
