@@ -1,0 +1,44 @@
+<div *ngIf="profile" class="w-100 p-2" id="div-main">
+  <div *ngIf="!isCreating">
+    <!-- Create New Game Buttons -->
+    <div class="d-flex justify-content-center">
+      <button
+        class="btn btn-success"
+        (click)="isCreating = true"
+      >
+        <i class="bi bi-plus-square"></i>
+        <span
+          class="ms-2"
+          [innerText]="
+            languagePack[language]['create']
+            + languagePack[language]['space']
+            + languagePack[language]['new']
+            + languagePack[language]['space']
+            + languagePack[language]['game']
+          "
+        ></span>
+      </button>
+    </div>
+    <!-- Playing History -->
+    <h2 class="mt-2" [innerText]="languagePack[language]['history']"></h2>
+  </div>
+  <div *ngIf="isCreating">
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between mt-2">
+      <button class="btn btn-secondary" (click)="isCreating = false">
+        <i class="bi bi-backspace"></i>
+        <span class="ms-2" [innerText]="languagePack[language]['back']"></span>
+      </button>
+      <button
+        class="btn btn-success"
+        (click)="createGame()"
+      >
+        <i
+          class="bi bi-plus-square"
+        ></i>
+        <span class="ms-2" [innerText]="languagePack[language]['create']"></span>
+      </button>
+    </div>
+  </div>
+</div>

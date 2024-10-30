@@ -1,0 +1,10 @@
+<nav class="navbar navbar-expand-lg w-100 d-flex justify-content-between p-2">
+  <a class="nav-link" [routerLink]="['/']">
+    <img alt="app-logo" [src]="iconImgUrl">
+  </a>
+  <h1 class="mb-0 text-white text-truncate d-inline-block" style="max-width: 50%;" [innerText]="title"></h1>
+  <div>
+    <span *ngIf="!isProduction" class="badge text-bg-primary me-2" [innerText]="'Test'"></span>
+    <img alt="user-logo" class="rounded-circle border-2" [src]="userIconImgUrl">
+  </div>
+</nav>
