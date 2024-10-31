@@ -1,11 +1,13 @@
 import { FirestoreService, GeneralAttr, Tables } from './firestore.service';
 
 import { Injectable } from '@angular/core';
+
 export interface UserCreateAttr {
   id: string;
   name: string;
   imgUrl: string;
   accounts: Account[];
+  ready?: boolean;
 }
 export type UserAttr = UserCreateAttr & GeneralAttr;
 export interface Account {

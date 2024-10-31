@@ -6,7 +6,20 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'new': '新',
     'game': '遊戲',
     'space': '',
-    'back': '返回'
+    'back': '返回',
+    'update': '更新',
+    'player-name': '玩家名稱',
+    'player-name-desc': '請輸入易於辨認的玩家名稱',
+    'countdown-target': '倒數目標秒數',
+    'game-countdown': '倒數遊戲',
+    'waiting-for-players': '等待其他玩家加入...',
+    'players': '玩家',
+    'you' : '你',
+    'ready': '準備完成',
+    'send-invitation': '發送邀請',
+    'start' : '開始遊戲',
+    'countdown-desc-1': '當數字達到',
+    'countdown-desc-2': '的時候按下按鈕'
   },
   'en': {
     'title': 'Little Games',
@@ -15,6 +28,19 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'new': 'New',
     'game': 'Game',
     'space': ' ',
-    'back': 'Back'
+    'back': 'Back',
+    'update': 'Update',
+    'player-name': 'Player Name',
+    'player-name-desc': 'Please enter a name that is easy to recognize',
+    'countdown-target': 'Countdown Target',
+    'game-countdown': 'Countdown',
+    'waiting-for-players': 'Waiting for other players to join...',
+    'players': 'Players',
+    'you' : 'You',
+    'ready': 'Ready',
+    'send-invitation': 'Send Invitation',
+    'start' : 'Start',
+    'countdown-desc-1': 'When the number reaches',
+    'countdown-desc-2': ', press the button'
   },
 }

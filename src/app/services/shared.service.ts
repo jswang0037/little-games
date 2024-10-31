@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Liff } from '@line/liff';
 import { Profile } from '@liff/get-profile';
+import { UserAttr } from './user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +17,14 @@ export class SharedService {
   public title: Observable<string|undefined> = this.titleSubject.asObservable();
   private languageObject = new BehaviorSubject<string>('en');
   public language: Observable<string> = this.languageObject.asObservable();
+  private userSubject = new BehaviorSubject<UserAttr|undefined>(undefined);
+  public user: Observable<UserAttr|undefined> = this.userSubject.asObservable();
 
   setProfile(profile: Profile): void {
     this.profileSubject.next(profile);
+  }
+  setUser(user: UserAttr | undefined): void {
+    this.userSubject.next(user);
   }
   setLiff(liff: Liff): void {
     this.liffClientSubject.next(liff);

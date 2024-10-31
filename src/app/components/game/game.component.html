@@ -1,0 +1,92 @@
+<div *ngIf="game && user" class="w-100 p-2" id="div-game">
+  <app-user *ngIf="user.created.toMillis() === user.modified.toMillis()"></app-user>
+  <div *ngIf="user.created.toMillis() !== user.modified.toMillis()">
+    <div *ngIf="game.status === GameStatus.Waiting">
+      <!-- Waiting Info -->
+      <div class="alert alert-info" role="alert" [innerText]="languagePack[language]['waiting-for-players']"></div>
+      <!-- Players  -->
+      <h2 class="mt-2" [innerText]="languagePack[language]['players'] + '   ' + readyUserCount +  '/' + game.players.length"></h2>
+      <!-- Action Buttons  -->
+      <div class="d-flex justify-content-between mt-2">
+        <button class="btn btn-success" (click)="sendInvitation(game)">
+          <i class="bi bi-share"></i>
+          <span class="ms-2" [innerText]="languagePack[language]['send-invitation']"></span>
+        </button>
+        <button
+          *ngIf="!isReady"
+          class="btn btn-success"
+          (click)="ready()"
+        >
+          <i class="bi bi-check-lg"></i>
+          <span class="ms-2" [innerText]="languagePack[language]['ready']"></span>
+        </button>
+        <button
+          *ngIf="isReady && game.adminId === user.id"
+          class="btn btn-primary"
+          (click)="start()"
+          [disabled]="readyUserCount !== game.players.length"
+        >
+          <i class="bi bi-play"></i>
+          <span class="ms-2" [innerText]="languagePack[language]['start']"></span>
+        </button>
+      </div>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 p-2">
+        <div
+          *ngFor="let player of game.players"
+          class="border border-2 p-2 rounded m-1 player align-items-center d-flex"
+          [class.border-success]="player.ready"
+        >
+          <img alt="user-icon" class="rounded-circle user-icon" [src]="player.imgUrl">
+          <span class="ms-2 text-truncate d-inline-block" [innerText]="player.id===user.id? languagePack[language]['you'] : player.name"></span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="game.status === GameStatus.Playing">
+      <div class="d-flex justify-content-center mt-2">
+        <span
+          class="count"
+          [innerText]="count | number: '1.2-2'"
+          [class.opacity-100] = "count > 0 && count <= game.config.target * 0.04"
+          [class.opacity-75] = "count > 0.04 && count <= game.config.target * 0.08"
+          [class.opacity-50] = "count > 0.08 && count <= game.config.target * 0.12"
+          [class.opacity-25] = "count > 0.12 && count <= game.config.target * 0.16"
+          [class.opacity-0] = "count > 0.16"
+        ></span>
+      </div>
+      <div class="d-flex justify-content-center mt-2">
+        <button class="btn btn-lg btn-primary" (click)="logPlayerResult()" [disabled]="isLogged">
+          <i class="bi bi-stopwatch"></i>
+        </button>
+      </div>
+      <div class="d-flex justify-content-center mt-2">
+        <p [innerText]="languagePack[language]['countdown-desc-1'] + ' ' + game.config.target + ' ' + languagePack[language]['countdown-desc-2']"></p>
+
+      </div>
+    </div>
+
+    <div *ngIf="game.status === GameStatus.Finished">
+      <button (click)="restart()">
+        Restart
+      </button>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 p-2">
+        <div
+          *ngFor="let playerResult of game.results"
+          class="border border-2 p-2 rounded m-1 player d-flex justify-content-between align-items-center w-75"
+        >
+          <div class="d-flex justify-content-between align-items-center">
+            <img alt="user-icon" class="rounded-circle user-icon" [src]="playerResult.player.imgUrl">
+            <span class="ms-2 text-truncate d-inline-block" [innerText]="playerResult.player.id===user.id? languagePack[language]['you'] : playerResult.player.name"></span>
+          </div>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="ms-2 d-inline-block" [innerText]="playerResult.value  | number: '1.2-2' "></span>
+            <span
+              class="ms-2 d-inline-block"
+              [class.text-success]="playerResult.value >= game.config.target"
+              [class.text-danger]="playerResult.value < game.config.target"
+              [innerText]="'(' + (playerResult.value >= game.config.target? '+' : '') + ((playerResult.value - game.config.target)  | number: '1.2-2')  + ')'"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { DocumentData, QueryConstraint, QuerySnapshot, Timestamp, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc } from '@angular/fire/firestore';
+import { DocumentData, DocumentSnapshot, QueryConstraint, QuerySnapshot, Timestamp, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc } from '@angular/fire/firestore';
 
 import { FirebaseApp } from '@angular/fire/app';
 import { Injectable } from '@angular/core';
@@ -117,6 +117,16 @@ export class FirestoreService {
     }
   }
 
+  async appendData<T>(table: Tables, id: string, arrayKey: string, newData: T): Promise<void> {
+    try {
+      await updateDoc(doc(this.db, table, id), {
+        [arrayKey]: arrayUnion(newData)
+      });
+    } catch (e) {
+      console.error('appendData error: ', e);
+    }
+  }
+
   // Delete
   async deleteData(table: Tables, id: string): Promise<void> {
     try {
@@ -124,6 +134,14 @@ export class FirestoreService {
     } catch (e) {
       console.error('deleteData error: ', e);
     }
+  }
+
+  // Subscribe
+  subscribeData(table: Tables, id: string, callback: ( x: DocumentData | undefined) => void){
+    const docRef = doc(this.db, table, id);
+    onSnapshot(docRef, (doc) => {
+      callback(doc.data())
+    });
   }
 
 }

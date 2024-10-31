@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CountDownConfig, GameCreateAttr, GameName, GameService, GameStatus, GameType } from 'src/app/services/game.service';
 
+import { HtmlService } from '../../services/html.service';
 import { LanguagePack } from 'src/app/i18n';
 import { Liff } from '@line/liff';
 import { Profile } from '@liff/get-profile';
+import { Router } from '@angular/router';
 import { SharedService } from 'src/app/services/shared.service';
-import { UserService } from 'src/app/services/user.service';
+import { UserAttr } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-main',
@@ -16,8 +18,8 @@ export class MainComponent implements OnInit{
   constructor(
     private sharedService: SharedService,
     private gameService: GameService,
-    private userService: UserService
-
+    private htmlService: HtmlService,
+    private router: Router
   ){}
 
   liffClient!: Liff | undefined;
@@ -25,6 +27,7 @@ export class MainComponent implements OnInit{
   language!: string;
   languagePack = LanguagePack;
   isCreating = false;
+  user!: UserAttr | undefined;
 
   async createGame(){
     if(!this.profile){
@@ -32,7 +35,7 @@ export class MainComponent implements OnInit{
     }
 
     const config: CountDownConfig = {
-      target: 10,
+      target: Number(this.htmlService.getInputValue("input-countdown-target")) || 0,
     }
 
     const newGame: GameCreateAttr = {
@@ -40,16 +43,18 @@ export class MainComponent implements OnInit{
       name: GameName.CountDown,
       status: GameStatus.Waiting,
       adminId: this.profile.userId,
+      maxPlayers: 100,
       players: [],
       results: [],
       config: config
     }
 
     const gameId = await this.gameService.createGame(newGame);
-    const user = await this.userService.getUserById(this.profile.userId);
-    if(user){
-      await this.gameService.addPlayerToGame(gameId, user)
+    if(this.user){
+      await this.gameService.addPlayerToGame(gameId, this.user)
     }
+
+    this.router.navigate(['/game', gameId])
   }
 
   ngOnInit(){
@@ -62,6 +67,9 @@ export class MainComponent implements OnInit{
     })
     this.sharedService.profile.subscribe(value => {
       this.profile = value;
+    })
+    this.sharedService.user.subscribe(value => {
+      this.user = value;
     })
   }
 }

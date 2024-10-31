@@ -1,0 +1,28 @@
+<div class="w-100 p-2" *ngIf="user" id="div-user">
+  <!-- CountDown Config -->
+  <span class="font-title-md" [innerText]="languagePack[language]['player-name']"></span>
+  <input
+    class="form-control"
+    id="input-name"
+    [value]="user.name"
+    [class.is-invalid]="!nameIsValid"
+    [class.is-valid]="nameIsValid"
+    (input)="validate()"
+    (paste)="validate()"
+    type="text"
+  >
+  <div class="form-text" [innerText]="languagePack[language]['player-name-desc']"></div>
+  <!-- Action Buttons -->
+  <div class="d-flex justify-content-end mt-2">
+    <button
+      class="btn btn-primary"
+      (click)="updateUser()"
+      [disabled]="!nameIsValid"
+    >
+      <i
+        class="bi bi-arrow-repeat"
+      ></i>
+      <span class="ms-2" [innerText]="languagePack[language]['update']"></span>
+    </button>
+  </div>
+</div>

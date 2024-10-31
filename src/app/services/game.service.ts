@@ -1,5 +1,6 @@
 import { FirestoreService, GeneralAttr, IdAttr, Tables } from './firestore.service';
 
+import { DocumentData } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { UserAttr } from './user.service';
 
@@ -11,6 +12,7 @@ export enum GameName {
 }
 export enum GameStatus {
   Waiting = 'Waiting',
+  Start = 'Start',
   Playing = 'Playing',
   Finished = 'Finished',
 }
@@ -27,6 +29,7 @@ export interface GameCreateAttr {
   status: GameStatus;
   adminId: string;
   players: UserAttr[];
+  maxPlayers: number;
   results: GameResult[];
   config: CountDownConfig;
 }
@@ -40,23 +43,34 @@ export class GameService {
     private firestoreService: FirestoreService
   ) { }
 
+  subscribeGame(gameId: string, callback: ( x: DocumentData | undefined) => void)
+  {
+    this.firestoreService.subscribeData(Tables.Game, gameId, callback);
+  }
+
   async createGame(gameCreateAttr: GameCreateAttr): Promise<string> {
     return await this.firestoreService.addData(Tables.Game, gameCreateAttr);
   }
-  async getGameById(id: string): Promise<GameCreateAttr | undefined> {
+  async getGameById(id: string): Promise<GameAttr | undefined> {
     return await this.firestoreService.getDataById(Tables.Game, id);
   }
-  async updateGame(id: string, gameAttr: Partial<GameCreateAttr>): Promise<void> {
+  async updateGame(id: string, gameAttr: Partial<GameAttr>): Promise<void> {
     await this.firestoreService.updateData(Tables.Game, id, gameAttr)
   }
   async addPlayerToGame(id: string, player: UserAttr): Promise<void> {
+    await this.firestoreService.appendData(Tables.Game, id, 'players', player);
+  }
+  async updatePlayerInGame(id: string, player: UserAttr): Promise<void> {
     const game = await this.getGameById(id);
     if(game){
-      if(!game.players){
-        game.players = [];
-      }
-      game.players.push(player);
-      await this.firestoreService.updateData(Tables.Game, id, game);
+      game.players.forEach((p, index) => {
+        if(p.id === player.id){
+          game.players[index] = player;
+        }
+      })
+      await this.updateGame(id, game);
+    }else{
+      console.error("Game Not Found")
     }
   }
   async removePlayerFromGame(id: string, player: UserAttr): Promise<void> {
@@ -67,14 +81,7 @@ export class GameService {
     }
   }
   async addResultToGame(id: string, result: GameResult): Promise<void> {
-    const game = await this.getGameById(id);
-    if(game){
-      if(!game.results){
-        game.results = [];
-      }
-      game.results.push(result);
-      await this.firestoreService.updateData(Tables.Game, id, game);
-    }
+    await this.firestoreService.appendData(Tables.Game, id, 'results', result);
   }
   async removeResultFromGame(id: string, result: GameResult): Promise<void> {
     const game = await this.getGameById(id);

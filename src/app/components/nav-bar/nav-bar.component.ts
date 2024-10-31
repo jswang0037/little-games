@@ -5,7 +5,7 @@ import liff, { Liff } from '@line/liff';
 import { AlertService } from 'src/app/services/alert.service';
 import { Profile } from '@liff/get-profile';
 import { SharedService } from 'src/app/services/shared.service';
-import { environment } from 'src/environments/environment.dev';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-nav-bar',
@@ -21,19 +21,28 @@ export class NavBarComponent implements OnInit{
 
   isProduction = environment.isProduction
   fakeProfile: Profile = {
-    userId: 'test-user',
+    userId: 'test-user-2',
     displayName: 'Test User'
   }
 
   liffId = '2006516939-5zbAVx6N';
-  iconImgUrl = 'assets/imgs/bill-sharing-icon.png';
-  defaultUserIconImgUrl = 'assets/imgs/user-icon.png';
+  iconImgUrl = 'assets/imgs/app-icon.png';
+  userIconList = [
+    'assets/imgs/user-icon-1.png',
+    'assets/imgs/user-icon-2.png',
+    'assets/imgs/user-icon-3.png',
+    'assets/imgs/user-icon-4.png',
+    'assets/imgs/user-icon-5.png',
+    'assets/imgs/user-icon-6.png',
+    'assets/imgs/user-icon-7.png',
+    'assets/imgs/user-icon-8.png',
+    'assets/imgs/user-icon-9.png',
+  ]
 
   profile!: Profile | undefined;
   liffClient!: Liff | undefined;
   title!: string | undefined;
   language!: string;
-
   userIconImgUrl!: string | undefined;
 
   initLiff(): void {
@@ -64,6 +73,12 @@ export class NavBarComponent implements OnInit{
     }
   }
 
+  pickRandomElement(array: string[]){
+    const length = array.length;
+    const randomIndex = Math.floor(Math.random() * length);
+    return array[randomIndex];
+  }
+
   async getProfile(){
     if (!this.liffClient){
       return
@@ -85,21 +100,29 @@ export class NavBarComponent implements OnInit{
     // Create or update user in firestore
     const userId = this.profile.userId;
     const user = await this.userService.getUserById(userId);
-    if (user) {
-      this.userService.updateUser(userId, {
-        name: this.profile.displayName,
-        imgUrl: this.profile.pictureUrl? this.profile.pictureUrl : this.defaultUserIconImgUrl,
-        accounts: user.accounts? user.accounts : []
-      })
-    } else {
-      const newUser: UserCreateAttr = {
-        id: userId,
-        name: this.profile.displayName,
-        imgUrl: this.profile.pictureUrl? this.profile.pictureUrl : this.defaultUserIconImgUrl,
-        accounts: []
-      };
-      this.userService.createUserWithId(newUser)
+    if(user){
+      this.userIconImgUrl = user.imgUrl
+      this.sharedService.setUser(user)
+      return
     }
+    const newUserIcon = this.pickRandomElement(this.userIconList);
+    const newUser: UserCreateAttr = {
+      id: userId,
+      name: this.profile.displayName,
+      imgUrl: newUserIcon,
+      accounts: []
+    };
+    this.userIconImgUrl = newUserIcon;
+    await this.userService.createUserWithId(newUser)
+    await this.getUser()
+  }
+
+  async getUser(){
+    if(!this.profile){
+      return
+    }
+    const user = await this.userService.getUserById(this.profile.userId)
+    this.sharedService.setUser(user)
   }
 
   ngOnInit() {
@@ -107,9 +130,6 @@ export class NavBarComponent implements OnInit{
 
     this.sharedService.title.subscribe(value => {
       this.title = value
-    })
-    this.sharedService.profile.subscribe(value => {
-      this.userIconImgUrl = value?.pictureUrl? value?.pictureUrl : this.defaultUserIconImgUrl;
     })
     this.sharedService.liffClient.subscribe(value => {
       this.liffClient = value;

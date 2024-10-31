@@ -7,12 +7,16 @@ import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { MainComponent } from './components/main/main.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { UserComponent } from './components/user/user.component';
+import { GameComponent } from './components/game/game.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainComponent,
-    NavBarComponent
+    NavBarComponent,
+    UserComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,
