@@ -23,6 +23,22 @@
       </div>
       <!-- Playing History -->
       <h2 class="mt-2" [innerText]="languagePack[language]['history']"></h2>
+      <div class="row p-2">
+        <div *ngFor="let game of games" class="border border-2 p-2" [routerLink]="['/game', game.id]">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 [innerText]="languagePack[language][game.name]"></h3>
+            <span
+              class="badge"
+              [class.text-bg-primary]="game.status === GameStatus.Waiting"
+              [class.text-bg-success]="game.status === GameStatus.Playing"
+              [class.text-bg-secondary]="game.status === GameStatus.Finished"
+              [innerText]="languagePack[language][game.status]">
+            </span>
+          </div>
+          <span class="text-muted fs-6" [innerText]="game.modified.toDate().toLocaleString()"></span>
+        </div>
+
+      </div>
     </div>
     <div *ngIf="isCreating">
 

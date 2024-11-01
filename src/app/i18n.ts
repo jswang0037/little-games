@@ -19,7 +19,15 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'send-invitation': '發送邀請',
     'start' : '開始遊戲',
     'countdown-desc-1': '當數字達到',
-    'countdown-desc-2': '的時候按下按鈕'
+    'countdown-desc-2': '的時候按下按鈕',
+    'restart': '重新開始',
+    'results': '遊玩結果',
+    'game-not-found': '遊戲不存在',
+    'game-not-found-description':  '這個遊戲可能已經被刪除了或不存在',
+    'waiting-for-admin-to-start': '等待管理員開始遊戲...',
+    'Waiting': '等待加入',
+    'Finished': '已結束',
+    'Playing': '進行中'
   },
   'en': {
     'title': 'Little Games',
@@ -41,6 +49,14 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'send-invitation': 'Send Invitation',
     'start' : 'Start',
     'countdown-desc-1': 'When the number reaches',
-    'countdown-desc-2': ', press the button'
+    'countdown-desc-2': ', press the button',
+    'restart': 'Restart',
+    'results': 'Results',
+    'game-not-found': 'Game Not Found',
+    'game-not-found-description':  'This game may have been deleted or not exist',
+    'waiting-for-admin-to-start': 'Waiting for admin to start the game...',
+    'Waiting': 'Waiting',
+    'Finished': 'Finished',
+    'Playing': 'Playing'
   },
 }

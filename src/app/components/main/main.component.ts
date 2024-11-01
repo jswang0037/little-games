@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CountDownConfig, GameCreateAttr, GameName, GameService, GameStatus, GameType } from 'src/app/services/game.service';
+import { CountDownConfig, GameAttr, GameCreateAttr, GameName, GameService, GameStatus, GameType } from 'src/app/services/game.service';
 
 import { HtmlService } from '../../services/html.service';
 import { LanguagePack } from 'src/app/i18n';
@@ -28,6 +28,8 @@ export class MainComponent implements OnInit{
   languagePack = LanguagePack;
   isCreating = false;
   user!: UserAttr | undefined;
+  games: GameAttr[] = [];
+  GameStatus = GameStatus;
 
   async createGame(){
     if(!this.profile){
@@ -44,6 +46,7 @@ export class MainComponent implements OnInit{
       status: GameStatus.Waiting,
       adminId: this.profile.userId,
       maxPlayers: 100,
+      playerIds: [],
       players: [],
       results: [],
       config: config
@@ -55,6 +58,13 @@ export class MainComponent implements OnInit{
     }
 
     this.router.navigate(['/game', gameId])
+  }
+
+  async getGames(){
+    if(this.user){
+      this.games = await this.gameService.getGamesIncludeUser(this.user.id)
+      console.log(this.games)
+    }
   }
 
   ngOnInit(){
@@ -70,6 +80,7 @@ export class MainComponent implements OnInit{
     })
     this.sharedService.user.subscribe(value => {
       this.user = value;
+      this.getGames()
     })
   }
 }

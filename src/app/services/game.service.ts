@@ -1,6 +1,6 @@
+import { DocumentData, where } from '@angular/fire/firestore';
 import { FirestoreService, GeneralAttr, IdAttr, Tables } from './firestore.service';
 
-import { DocumentData } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { UserAttr } from './user.service';
 
@@ -8,12 +8,13 @@ export enum GameType {
   Many = 'Many'
 }
 export enum GameName {
-  CountDown = 'CountDown',
+  CountDown = 'game-countdown',
 }
 export enum GameStatus {
   Waiting = 'Waiting',
   Start = 'Start',
   Playing = 'Playing',
+  Calculating = 'Calculating',
   Finished = 'Finished',
 }
 export interface GameResult {
@@ -28,6 +29,7 @@ export interface GameCreateAttr {
   name: GameName;
   status: GameStatus;
   adminId: string;
+  playerIds: string[];
   players: UserAttr[];
   maxPlayers: number;
   results: GameResult[];
@@ -59,6 +61,7 @@ export class GameService {
   }
   async addPlayerToGame(id: string, player: UserAttr): Promise<void> {
     await this.firestoreService.appendData(Tables.Game, id, 'players', player);
+    await this.firestoreService.appendData(Tables.Game, id, 'playerIds', player.id);
   }
   async updatePlayerInGame(id: string, player: UserAttr): Promise<void> {
     const game = await this.getGameById(id);
@@ -89,5 +92,8 @@ export class GameService {
       game.results = game.results.filter(r => r.player.id !== result.player.id);
       await this.firestoreService.updateData(Tables.Game, id, game);
     }
+  }
+  async getGamesIncludeUser(playerId: string): Promise<GameAttr[]> {
+    return await this.firestoreService.getDocumentsByQuery(Tables.Game, [where('playerIds', 'array-contains', playerId)]);
   }
 }

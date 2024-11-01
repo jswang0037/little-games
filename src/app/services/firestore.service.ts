@@ -1,4 +1,4 @@
-import { DocumentData, DocumentSnapshot, QueryConstraint, QuerySnapshot, Timestamp, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc } from '@angular/fire/firestore';
+import { DocumentData, QueryConstraint, QuerySnapshot, Timestamp, arrayUnion, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, query, setDoc, updateDoc } from '@angular/fire/firestore';
 
 import { FirebaseApp } from '@angular/fire/app';
 import { Injectable } from '@angular/core';

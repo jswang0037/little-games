@@ -1,7 +1,7 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { GameAttr, GameName, GameStatus } from 'src/app/services/game.service';
 
-import { ActivatedRoute } from '@angular/router';
 import { AlertService } from 'src/app/services/alert.service';
 import { GameService } from '../../services/game.service';
 import { LanguagePack } from 'src/app/i18n';
@@ -20,7 +20,7 @@ export class GameComponent implements OnInit{
     private sharedService: SharedService,
     private route: ActivatedRoute,
     private gameService: GameService,
-    private alertService: AlertService
+    private router: Router,
   ){}
 
   language!: string;
@@ -30,13 +30,13 @@ export class GameComponent implements OnInit{
   liffClient!: Liff | undefined;
   GameStatus = GameStatus;
   readyUserCount = 0
-  isReady = false;
   host = "https://little-games-a78c1.web.app";
   startTime = 0;
   endTime = 0;
   count = 0;
   interval!: NodeJS.Timeout;
   isLogged = false;
+  isReady = false;
 
   async getGame(gameId: string){
     this.game = await this.gameService.getGameById(gameId);
@@ -57,17 +57,21 @@ export class GameComponent implements OnInit{
         }
         if(this.game.status === GameStatus.Start){
           this.gameStart()
+          this.isLogged = false;
+          this.isReady = false;
           this.game.status = GameStatus.Playing;
           this.gameService.updateGame(this.game.id, this.game)
         }
         if(this.game.status === GameStatus.Playing){
           this.checkGame()
         }
-        if(this.game.status === GameStatus.Finished){
+        if(this.game.status === GameStatus.Calculating){
           this.game.results.sort((a, b) => Math.abs(a.value - target) - Math.abs(b.value - target));
+          this.game.status = GameStatus.Finished;
+          this.gameService.updateGame(this.game.id, this.game)
         }
       }else{
-        console.error("Game Not Found")
+        this.router.navigate(['/game-not-found'])
       }
     })
   }
@@ -97,7 +101,7 @@ export class GameComponent implements OnInit{
   checkGame(){
     if(this.game){
       if(this.game.status === GameStatus.Playing && this.game.players.length === this.game.results.length){
-        this.game.status = GameStatus.Finished;
+        this.game.status = GameStatus.Calculating;
         clearInterval(this.interval);
         this.gameService.updateGame(this.game.id, this.game)
       }

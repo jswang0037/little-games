@@ -1,9 +1,11 @@
 <div *ngIf="game && user" class="w-100 p-2" id="div-game">
   <app-user *ngIf="user.created.toMillis() === user.modified.toMillis()"></app-user>
   <div *ngIf="user.created.toMillis() !== user.modified.toMillis()">
+    <!-- Waiting -->
     <div *ngIf="game.status === GameStatus.Waiting">
       <!-- Waiting Info -->
-      <div class="alert alert-info" role="alert" [innerText]="languagePack[language]['waiting-for-players']"></div>
+      <div *ngIf="readyUserCount !== game.players.length" class="alert alert-info" role="alert" [innerText]="languagePack[language]['waiting-for-players']"></div>
+      <div *ngIf="readyUserCount === game.players.length" class="alert alert-success" role="alert" [innerText]="languagePack[language]['waiting-for-admin-to-start']"></div>
       <!-- Players  -->
       <h2 class="mt-2" [innerText]="languagePack[language]['players'] + '   ' + readyUserCount +  '/' + game.players.length"></h2>
       <!-- Action Buttons  -->
@@ -30,7 +32,8 @@
           <span class="ms-2" [innerText]="languagePack[language]['start']"></span>
         </button>
       </div>
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 p-2">
+      <!-- Players -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 px-2 mt-2">
         <div
           *ngFor="let player of game.players"
           class="border border-2 p-2 rounded m-1 player align-items-center d-flex"
@@ -41,34 +44,43 @@
         </div>
       </div>
     </div>
+    <!-- Playing -->
     <div *ngIf="game.status === GameStatus.Playing">
+      <!-- Countdown Number -->
       <div class="d-flex justify-content-center mt-2">
         <span
           class="count"
           [innerText]="count | number: '1.2-2'"
-          [class.opacity-100] = "count > 0 && count <= game.config.target * 0.04"
-          [class.opacity-75] = "count > 0.04 && count <= game.config.target * 0.08"
-          [class.opacity-50] = "count > 0.08 && count <= game.config.target * 0.12"
-          [class.opacity-25] = "count > 0.12 && count <= game.config.target * 0.16"
-          [class.opacity-0] = "count > 0.16"
+          [style.opacity] = "1 - count / (game.config.target * 0.2)"
         ></span>
       </div>
+      <!-- Log Result -->
       <div class="d-flex justify-content-center mt-2">
         <button class="btn btn-lg btn-primary" (click)="logPlayerResult()" [disabled]="isLogged">
           <i class="bi bi-stopwatch"></i>
         </button>
       </div>
+      <!-- Game Info -->
       <div class="d-flex justify-content-center mt-2">
         <p [innerText]="languagePack[language]['countdown-desc-1'] + ' ' + game.config.target + ' ' + languagePack[language]['countdown-desc-2']"></p>
-
       </div>
     </div>
-
+    <!-- Finished -->
     <div *ngIf="game.status === GameStatus.Finished">
-      <button (click)="restart()">
-        Restart
-      </button>
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 p-2">
+      <!-- Action Buttons  -->
+      <div class="d-flex justify-content-between mt-2">
+        <button
+          *ngIf="game.adminId === user.id"
+          class="btn btn-primary"
+          (click)="restart()"
+        >
+          <i class="bi bi-arrow-clockwise"></i>
+          <span class="ms-2" [innerText]="languagePack[language]['restart']"></span>
+        </button>
+      </div>
+      <!-- Results -->
+      <h2 [innerText]="languagePack[language]['results']" class="mt-2"></h2>
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 px-2">
         <div
           *ngFor="let playerResult of game.results"
           class="border border-2 p-2 rounded m-1 player d-flex justify-content-between align-items-center w-75"
