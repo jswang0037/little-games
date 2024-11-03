@@ -2,7 +2,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { GameAttr, GameName, GameStatus } from 'src/app/services/game.service';
 
-import { AlertService } from 'src/app/services/alert.service';
 import { GameService } from '../../services/game.service';
 import { LanguagePack } from 'src/app/i18n';
 import { Liff } from '@line/liff';
@@ -29,11 +28,13 @@ export class GameComponent implements OnInit{
   game!: GameAttr | undefined;
   liffClient!: Liff | undefined;
   GameStatus = GameStatus;
+  GameName = GameName;
   readyUserCount = 0
   host = "https://little-games-a78c1.web.app";
   startTime = 0;
   endTime = 0;
   count = 0;
+  resultCount = 0;
   interval!: NodeJS.Timeout;
   isLogged = false;
   isReady = false;
@@ -57,8 +58,6 @@ export class GameComponent implements OnInit{
         }
         if(this.game.status === GameStatus.Start){
           this.gameStart()
-          this.isLogged = false;
-          this.isReady = false;
           this.game.status = GameStatus.Playing;
           this.gameService.updateGame(this.game.id, this.game)
         }
@@ -77,6 +76,8 @@ export class GameComponent implements OnInit{
   }
 
   gameStart(){
+    this.isLogged = false;
+    this.isReady = false;
     this.startTime = Timestamp.now().toMillis();
     this.interval = setInterval(() => {
       this.count  =  ((Timestamp.now().toMillis() - this.startTime) / 1000);
@@ -99,8 +100,9 @@ export class GameComponent implements OnInit{
   }
 
   checkGame(){
-    if(this.game){
-      if(this.game.status === GameStatus.Playing && this.game.players.length === this.game.results.length){
+    if(this.game && this.game.status === GameStatus.Playing){
+      this.resultCount = this.game.results.length;
+      if(this.game.players.length === this.game.results.length){
         this.game.status = GameStatus.Calculating;
         clearInterval(this.interval);
         this.gameService.updateGame(this.game.id, this.game)
@@ -110,15 +112,25 @@ export class GameComponent implements OnInit{
 
   async checkUser(){
     if(this.game && this.user){
-      this.isReady = this.game.players.find(p => (p.id === this.user?.id && p.ready))? true : false;
-      if(this.user.created.toMillis() == this.user.modified.toMillis()){
-        return
-      }
-      if(!this.game.players.find(p => p.id === this.user?.id)){
-        if(this.game.status === GameStatus.Waiting){
-          await this.gameService.addPlayerToGame(this.game.id, this.user)
+      const userId = this.user.id;
+      const userIsInGame = this.game.players.find(p => p.id === userId)? true : false;
+
+      if(this.game.status === GameStatus.Waiting){
+        if(userIsInGame){
+          this.isReady = this.game.players.find(p => (p.id === this.user?.id && p.ready))? true : false;
         }else{
-          console.error("Game is not waiting")
+          await this.gameService.addPlayerToGame(this.game.id, this.user)
+        }
+      }else if(this.game.status === GameStatus.Playing){
+        if(userIsInGame){
+          const userLoggedResult = this.game.results.find(p => p.player.id === userId)? true : false;
+          if(userLoggedResult){
+            this.isLogged = true;
+          }else{
+            this.gameStart();
+          }
+        }else{
+          this.router.navigate(['/']);
         }
       }
     }else{

@@ -27,7 +27,9 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'waiting-for-admin-to-start': '等待管理員開始遊戲...',
     'Waiting': '等待加入',
     'Finished': '已結束',
-    'Playing': '進行中'
+    'Playing': '進行中',
+    'how-to-play': '遊玩方式',
+    'wait-for-other-player-done': '等待其他玩家完成...',
   },
   'en': {
     'title': 'Little Games',
@@ -57,6 +59,8 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'waiting-for-admin-to-start': 'Waiting for admin to start the game...',
     'Waiting': 'Waiting',
     'Finished': 'Finished',
-    'Playing': 'Playing'
+    'Playing': 'Playing',
+    'how-to-play': 'How to Play',
+    'wait-for-other-player-done': 'Waiting for other players to finish...',
   },
 }

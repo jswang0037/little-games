@@ -6,6 +6,12 @@
       <!-- Waiting Info -->
       <div *ngIf="readyUserCount !== game.players.length" class="alert alert-info" role="alert" [innerText]="languagePack[language]['waiting-for-players']"></div>
       <div *ngIf="readyUserCount === game.players.length" class="alert alert-success" role="alert" [innerText]="languagePack[language]['waiting-for-admin-to-start']"></div>
+      <!-- Game Description -->
+      <h2 [innerText]="languagePack[language]['how-to-play']"></h2>
+      <div class="d-flex justify-content-start mt-2" >
+        <!-- Game: Countdown -->
+        <p *ngIf="game.name === GameName.CountDown" [innerText]="languagePack[language]['countdown-desc-1'] + ' ' + game.config.target + ' ' + languagePack[language]['countdown-desc-2']"></p>
+      </div>
       <!-- Players  -->
       <h2 class="mt-2" [innerText]="languagePack[language]['players'] + '   ' + readyUserCount +  '/' + game.players.length"></h2>
       <!-- Action Buttons  -->
@@ -46,27 +52,40 @@
     </div>
     <!-- Playing -->
     <div *ngIf="game.status === GameStatus.Playing">
-      <!-- Countdown Number -->
-      <div class="d-flex justify-content-center mt-2">
-        <span
-          class="count"
-          [innerText]="count | number: '1.2-2'"
-          [style.opacity] = "1 - count / (game.config.target * 0.2)"
-        ></span>
-      </div>
-      <!-- Log Result -->
-      <div class="d-flex justify-content-center mt-2">
-        <button class="btn btn-lg btn-primary" (click)="logPlayerResult()" [disabled]="isLogged">
-          <i class="bi bi-stopwatch"></i>
-        </button>
-      </div>
-      <!-- Game Info -->
-      <div class="d-flex justify-content-center mt-2">
-        <p [innerText]="languagePack[language]['countdown-desc-1'] + ' ' + game.config.target + ' ' + languagePack[language]['countdown-desc-2']"></p>
+      <!-- Game: Countdown -->
+      <div *ngIf="game.name === GameName.CountDown">
+        <!-- Countdown Number -->
+        <div class="d-flex justify-content-center">
+          <span
+            class="count"
+            [innerText]="count | number: '1.2-2'"
+            [style.opacity] = "1 - count / (game.config.target * 0.2)"
+            [class.opacity-0]="isLogged"
+          ></span>
+        </div>
+        <!-- Game Description -->
+        <div class="d-flex justify-content-center mt-2">
+          <p [innerText]="languagePack[language]['countdown-desc-1'] + ' ' + game.config.target + ' ' + languagePack[language]['countdown-desc-2']"></p>
+        </div>
+        <!-- Log Result -->
+        <div class="d-flex justify-content-center mt-2" *ngIf="!isLogged">
+          <button class="btn btn-lg btn-primary" (click)="logPlayerResult()">
+            <i class="bi bi-stopwatch"></i>
+          </button>
+        </div>
+        <!-- Other Player Info -->
+        <div
+          *ngIf="isLogged"
+          class="alert alert-info mt-2"
+          role="alert"
+          [innerText]="languagePack[language]['wait-for-other-player-done'] + ' (' + game.results.length + '/' + game.players.length + ')'"
+        ></div>
       </div>
     </div>
     <!-- Finished -->
     <div *ngIf="game.status === GameStatus.Finished">
+      <!-- Results -->
+      <h2 [innerText]="languagePack[language]['results']" class="mt-2"></h2>
       <!-- Action Buttons  -->
       <div class="d-flex justify-content-between mt-2">
         <button
@@ -78,12 +97,12 @@
           <span class="ms-2" [innerText]="languagePack[language]['restart']"></span>
         </button>
       </div>
-      <!-- Results -->
-      <h2 [innerText]="languagePack[language]['results']" class="mt-2"></h2>
-      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 px-2">
+      <!-- Player Result -->
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 px-2 mt-2">
         <div
-          *ngFor="let playerResult of game.results"
+          *ngFor="let playerResult of game.results; let i = index"
           class="border border-2 p-2 rounded m-1 player d-flex justify-content-between align-items-center w-75"
+          [class.border-success]="i===0"
         >
           <div class="d-flex justify-content-between align-items-center">
             <img alt="user-icon" class="rounded-circle user-icon" [src]="playerResult.player.imgUrl">
