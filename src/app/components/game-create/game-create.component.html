@@ -1,0 +1,51 @@
+<div id="div-create-game" class="w-100 p-2">
+  <h2
+    [innerText]="languagePack[language]['create']
+      + languagePack[language]['space']
+      + languagePack[language]['new']
+      + languagePack[language]['space']
+      + languagePack[language]['game']"></h2>
+  <h3 [innerText]="languagePack[language]['game-type']"></h3>
+  <select
+    id="select-game-name"
+    class="form-select mb-2"
+    (change)="check()"
+  >
+    <option disabled selected></option>
+    <option
+      [value]="GameName.CountDown"
+      [innerText]="languagePack[language]['game-countdown']"
+    ></option>
+  </select>
+
+  <!-- CountDown Config -->
+  <h3 [innerText]="languagePack[language]['game-config']" *ngIf="gameName"></h3>
+
+  <!-- Game: Countdown -->
+  <div *ngIf="gameName === GameName.CountDown">
+    <span class="font-title-md" [innerText]="languagePack[language]['countdown-target']"></span>
+    <input
+      class="form-control"
+      id="input-countdown-target"
+      type="number"
+      min="0"
+      max="60"
+    >
+  </div>
+  <!-- Action Buttons -->
+  <div class="d-flex justify-content-between mt-2">
+    <button class="btn btn-secondary" [routerLink]="['/']">
+      <i class="bi bi-backspace"></i>
+      <span class="ms-2" [innerText]="languagePack[language]['back']"></span>
+    </button>
+    <button
+      class="btn btn-success"
+      (click)="createGame()"
+    >
+      <i
+        class="bi bi-plus-square"
+      ></i>
+      <span class="ms-2" [innerText]="languagePack[language]['create']"></span>
+    </button>
+  </div>
+</div>

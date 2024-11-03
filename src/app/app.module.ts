@@ -10,6 +10,7 @@ import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { UserComponent } from './components/user/user.component';
 import { GameComponent } from './components/game/game.component';
 import { GameNotFoundComponent } from './components/game-not-found/game-not-found.component';
+import { GameCreateComponent } from './components/game-create/game-create.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { GameNotFoundComponent } from './components/game-not-found/game-not-foun
     NavBarComponent,
     UserComponent,
     GameComponent,
-    GameNotFoundComponent
+    GameNotFoundComponent,
+    GameCreateComponent
   ],
   imports: [
     BrowserModule,

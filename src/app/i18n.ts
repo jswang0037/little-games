@@ -30,6 +30,8 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'Playing': '進行中',
     'how-to-play': '遊玩方式',
     'wait-for-other-player-done': '等待其他玩家完成...',
+    'game-type': '遊戲類型',
+    'game-config': '遊戲設定'
   },
   'en': {
     'title': 'Little Games',
@@ -62,5 +64,7 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'Playing': 'Playing',
     'how-to-play': 'How to Play',
     'wait-for-other-player-done': 'Waiting for other players to finish...',
+    'game-type': 'Game Type',
+    'game-config': 'Game Config'
   },
 }
