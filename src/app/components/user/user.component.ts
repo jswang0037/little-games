@@ -43,6 +43,7 @@ export class UserComponent implements OnInit{
 
     const user = await this.userService.getUserById(this.profile.userId)
     this.sharedService.setUser(user)
+    this.sharedService.setIsSettingUser(false)
   }
 
   ngOnInit(){

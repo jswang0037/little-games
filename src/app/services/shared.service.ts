@@ -19,6 +19,8 @@ export class SharedService {
   public language: Observable<string> = this.languageObject.asObservable();
   private userSubject = new BehaviorSubject<UserAttr|undefined>(undefined);
   public user: Observable<UserAttr|undefined> = this.userSubject.asObservable();
+  private isSettingUserSubject = new BehaviorSubject<boolean>(false);
+  public isSettingUser: Observable<boolean> = this.isSettingUserSubject.asObservable();
 
   setProfile(profile: Profile): void {
     this.profileSubject.next(profile);
@@ -34,5 +36,8 @@ export class SharedService {
   }
   setLanguage(language: string): void {
     this.languageObject.next(language);
+  }
+  setIsSettingUser(isSettingUser: boolean): void {
+    this.isSettingUserSubject.next(isSettingUser);
   }
 }

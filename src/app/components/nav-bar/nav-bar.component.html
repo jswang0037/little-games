@@ -5,6 +5,6 @@
   <h1 class="mb-0 text-white text-truncate d-inline-block" style="max-width: 50%;" [innerText]="title"></h1>
   <div>
     <span *ngIf="!isProduction" class="badge text-bg-primary me-2" [innerText]="'Test'"></span>
-    <img alt="user-logo" class="rounded-circle border-2" [src]="userIconImgUrl">
+    <img alt="user-logo" class="rounded-circle border-2" [src]="userIconImgUrl" [routerLink]="['/user-setting']">
   </div>
 </nav>

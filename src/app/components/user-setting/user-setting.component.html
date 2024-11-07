@@ -1,0 +1,11 @@
+<div class="w-100 p-2" id="div-user-setting">
+  <div class="d-flex justify-content-center">
+    <button
+      *ngIf="!isSettingName"
+      class="btn btn-primary w-75"
+      [innerText]="languagePack[language]['name-setting']"
+      (click)="isSettingName = true"
+    ></button>
+  </div>
+  <app-user *ngIf="isSettingName"></app-user>
+</div>

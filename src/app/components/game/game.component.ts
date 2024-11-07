@@ -48,13 +48,13 @@ export class GameComponent implements OnInit{
       this.game = g as GameAttr;
 
       if(this.game){
+        this.checkUser()
         const target = this.game.config.target;
         if(this.game.name == GameName.CountDown){
           this.sharedService.setTitle(LanguagePack[this.language]['game-countdown'])
         }
         if(this.game.status === GameStatus.Waiting){
           this.readyUserCount = this.game.players.filter(p => p.ready).length;
-          this.checkUser()
         }
         if(this.game.status === GameStatus.Start){
           this.gameStart()
@@ -119,7 +119,9 @@ export class GameComponent implements OnInit{
         if(userIsInGame){
           this.isReady = this.game.players.find(p => (p.id === this.user?.id && p.ready))? true : false;
         }else{
-          await this.gameService.addPlayerToGame(this.game.id, this.user)
+          if(this.user.created.toMillis() !== this.user.modified.toMillis()){
+            await this.gameService.addPlayerToGame(this.game.id, this.user)
+          }
         }
       }else if(this.game.status === GameStatus.Playing){
         if(userIsInGame){
@@ -185,7 +187,9 @@ export class GameComponent implements OnInit{
     })
     this.sharedService.user.subscribe(value => {
       this.user = value;
-      this.checkUser()
+      if(this.user){
+        this.checkUser()
+      }
     })
     this.sharedService.liffClient.subscribe(value => {
       this.liffClient = value;

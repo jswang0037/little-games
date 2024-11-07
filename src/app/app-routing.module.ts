@@ -5,6 +5,7 @@ import { GameCreateComponent } from './components/game-create/game-create.compon
 import { GameNotFoundComponent } from './components/game-not-found/game-not-found.component';
 import { MainComponent } from './components/main/main.component';
 import { NgModule } from '@angular/core';
+import { UserSettingComponent } from './components/user-setting/user-setting.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
   {
     path: 'create-game',
     component: GameCreateComponent
+  },
+  {
+    path: 'user-setting',
+    component: UserSettingComponent
   }
 ];
 

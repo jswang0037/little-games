@@ -11,6 +11,7 @@ import { UserComponent } from './components/user/user.component';
 import { GameComponent } from './components/game/game.component';
 import { GameNotFoundComponent } from './components/game-not-found/game-not-found.component';
 import { GameCreateComponent } from './components/game-create/game-create.component';
+import { UserSettingComponent } from './components/user-setting/user-setting.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { GameCreateComponent } from './components/game-create/game-create.compon
     UserComponent,
     GameComponent,
     GameNotFoundComponent,
-    GameCreateComponent
+    GameCreateComponent,
+    UserSettingComponent
   ],
   imports: [
     BrowserModule,

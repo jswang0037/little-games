@@ -9,6 +9,7 @@ export enum GameType {
 }
 export enum GameName {
   CountDown = 'game-countdown',
+  Bingo = 'game-bingo'
 }
 export enum GameStatus {
   Waiting = 'Waiting',
