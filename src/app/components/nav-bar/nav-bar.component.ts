@@ -21,7 +21,7 @@ export class NavBarComponent implements OnInit{
 
   isProduction = environment.isProduction
   fakeProfile: Profile = {
-    userId: 'test-user-2',
+    userId: 'test-user-1',
     displayName: 'Test User'
   }
 

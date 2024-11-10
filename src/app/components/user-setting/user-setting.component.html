@@ -26,6 +26,12 @@
       [innerText]="'Player 3'"
       (click)="setProfile('test-user-3')"
       ></button>
+      <button
+        *ngIf="!isSettingName"
+        class="btn btn-info w-25"
+        [innerText]="'Player 4'"
+        (click)="setProfile('test-user-4')"
+        ></button>
   </div>
   <app-user *ngIf="isSettingName"></app-user>
 </div>
