@@ -38,6 +38,7 @@ export class GameComponent implements OnInit{
   interval!: NodeJS.Timeout;
   isLogged = false;
   isReady = false;
+  isPlaying = false;
 
   async getGame(gameId: string){
     this.game = await this.gameService.getGameById(gameId);
@@ -90,6 +91,13 @@ export class GameComponent implements OnInit{
         this.gameService.updateGame(this.game.id, this.game)
       }
     }
+    this.isLogged = false;
+    this.isReady = false;
+    this.isPlaying = true;
+    this.startTime = Timestamp.now().toMillis();
+    this.interval = setInterval(() => {
+      this.count  =  ((Timestamp.now().toMillis() - this.startTime) / 1000);
+    }, 1)
   }
 
   async logPlayerResult(){
@@ -139,9 +147,12 @@ export class GameComponent implements OnInit{
           if(userLoggedResult){
             this.isLogged = true;
           }else{
-            this.gameStart();
+            if(!this.isPlaying){
+              this.gameStart();
+            }
           }
         }else{
+          console.error('User Not In Game')
           this.router.navigate(['/']);
         }
       }

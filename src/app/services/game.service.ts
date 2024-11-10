@@ -102,6 +102,7 @@ export class GameService {
     }
   }
   async getGamesIncludeUser(playerId: string): Promise<GameAttr[]> {
+    console.log('getGamesIncludeUser', playerId)
     return await this.firestoreService.getDocumentsByQuery(Tables.Game, [where('playerIds', 'array-contains', playerId)]);
   }
 }
