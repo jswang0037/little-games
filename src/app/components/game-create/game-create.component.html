@@ -16,22 +16,42 @@
       [value]="GameName.CountDown"
       [innerText]="languagePack[language]['game-countdown']"
     ></option>
+    <option
+      [value]="GameName.Majority"
+      [innerText]="languagePack[language]['game-majority']"
+    ></option>
   </select>
 
   <!-- CountDown Config -->
   <h3 [innerText]="languagePack[language]['game-config']" *ngIf="gameName"></h3>
-
   <!-- Game: Countdown -->
   <div *ngIf="gameName === GameName.CountDown">
     <span class="font-title-md" [innerText]="languagePack[language]['countdown-target']"></span>
     <input
       class="form-control"
-      id="input-countdown-target"
+      id="input-target"
       type="number"
       min="0"
       max="60"
+      (change)="validate()"
+      [class.is-valid]="configIsValid"
+      [class.is-invalid]="!configIsValid"
     >
   </div>
+  <!-- Game: Majority -->
+  <div *ngIf="gameName === GameName.Majority">
+    <span class="font-title-md" [innerText]="languagePack[language]['majority-target']"></span>
+    <input
+      class="form-control"
+      id="input-target"
+      type="number"
+      min="2"
+      (change)="validate()"
+      [class.is-valid]="configIsValid"
+      [class.is-invalid]="!configIsValid"
+    >
+  </div>
+
   <!-- Action Buttons -->
   <div class="d-flex justify-content-between mt-2">
     <button class="btn btn-secondary" [routerLink]="['/']">
@@ -40,6 +60,7 @@
     </button>
     <button
       class="btn btn-success"
+      [disabled]="!configIsValid"
       (click)="createGame()"
     >
       <i

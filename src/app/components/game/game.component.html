@@ -6,11 +6,14 @@
       <!-- Waiting Info -->
       <div *ngIf="readyUserCount !== game.players.length" class="alert alert-info" role="alert" [innerText]="languagePack[language]['waiting-for-players']"></div>
       <div *ngIf="readyUserCount === game.players.length" class="alert alert-success" role="alert" [innerText]="languagePack[language]['waiting-for-admin-to-start']"></div>
+      <div *ngIf="game.name === GameName.Majority && game.players.length <= game.config.target" class="alert alert-danger" role="alert" [innerText]="languagePack[language]['player-not-enough']"></div>
       <!-- Game Description -->
       <h2 [innerText]="languagePack[language]['how-to-play']"></h2>
       <div class="d-flex justify-content-start mt-2" >
         <!-- Game: Countdown -->
         <p *ngIf="game.name === GameName.CountDown" [innerText]="languagePack[language]['countdown-desc-1'] + ' ' + game.config.target + ' ' + languagePack[language]['countdown-desc-2']"></p>
+        <!-- Game: Majority -->
+        <p *ngIf="game.name === GameName.Majority" [innerText]="languagePack[language]['majority-desc-1'] + ' ' + game.config.target + ' ' + languagePack[language]['majority-desc-2']"></p>
       </div>
       <!-- Players  -->
       <h2 class="mt-2" [innerText]="languagePack[language]['players'] + '   ' + readyUserCount +  '/' + game.players.length"></h2>
@@ -32,7 +35,10 @@
           *ngIf="isReady && game.adminId === user.id"
           class="btn btn-primary"
           (click)="start()"
-          [disabled]="readyUserCount !== game.players.length"
+          [disabled]="
+            readyUserCount !== game.players.length
+            || (game.name === GameName.Majority && game.players.length <= game.config.target)
+          "
         >
           <i class="bi bi-play"></i>
           <span class="ms-2" [innerText]="languagePack[language]['start']"></span>
@@ -81,6 +87,23 @@
           [innerText]="languagePack[language]['wait-for-other-player-done'] + ' (' + game.results.length + '/' + game.players.length + ')'"
         ></div>
       </div>
+      <!-- Game: Majority -->
+      <div *ngIf="game.name === GameName.Majority">
+        <!-- Countdown Number -->
+        <div class="d-flex justify-content-center">
+          <h2 [innerText]="languagePack[language]['round-desc-1'] + game.round + languagePack[language]['round-desc-2']"></h2>
+        </div>
+        <div>
+          <button class="btn btn-success">f</button>
+        </div>
+        <!-- Other Player Info -->
+        <div
+          *ngIf="isLogged"
+          class="alert alert-info mt-2"
+          role="alert"
+          [innerText]="languagePack[language]['wait-for-other-player-done'] + ' (' + game.results.length + '/' + game.players.length + ')'"
+        ></div>
+      </div>
     </div>
     <!-- Finished -->
     <div *ngIf="game.status === GameStatus.Finished">
@@ -112,6 +135,7 @@
             <span class="ms-2 d-inline-block" [innerText]="playerResult.value  | number: '1.2-2' "></span>
             <span
               class="ms-2 d-inline-block"
+              *ngIf="playerResult.value"
               [class.text-success]="playerResult.value >= game.config.target"
               [class.text-danger]="playerResult.value < game.config.target"
               [innerText]="'(' + (playerResult.value >= game.config.target? '+' : '') + ((playerResult.value - game.config.target)  | number: '1.2-2')  + ')'"></span>

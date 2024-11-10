@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CountDownConfig, GameAttr, GameCreateAttr, GameName, GameService, GameStatus, GameType } from 'src/app/services/game.service';
+import { GameAttr, GameCreateAttr, GameName, GameService, GameStatus, GameType, SingleTargetConfig } from 'src/app/services/game.service';
 
 import { HtmlService } from 'src/app/services/html.service';
 import { LanguagePack } from 'src/app/i18n';
@@ -30,22 +30,22 @@ export class GameCreateComponent  implements OnInit{
   GameStatus = GameStatus;
   GameName = GameName
   gameName!: GameName;
+  configIsValid = false;
 
   async createGame(){
     if(!this.user){
       return
     }
 
-    const config: CountDownConfig = {
-      target: Number(this.htmlService.getInputValue("input-countdown-target")) || 0,
+    const config: SingleTargetConfig = {
+      target: Number(this.htmlService.getInputValue("input-target")),
     }
 
     const newGame: GameCreateAttr = {
       type: GameType.Many,
-      name: GameName.CountDown,
+      name: this.gameName,
       status: GameStatus.Waiting,
       adminId: this.user.id,
-      maxPlayers: 100,
       playerIds: [],
       players: [],
       results: [],
@@ -70,6 +70,18 @@ export class GameCreateComponent  implements OnInit{
     const gameName = this.htmlService.getInputValue('select-game-name')
     if(gameName === GameName.CountDown){
       this.gameName = GameName.CountDown;
+    }else if(gameName === GameName.Majority){
+      this.gameName = GameName.Majority;
+    }
+  }
+
+  validate(){
+    const target = Number(this.htmlService.getInputValue("input-target"));
+    if(this.gameName === GameName.CountDown){
+      this.configIsValid = target > 0;
+    }else if(this.gameName === GameName.Majority){
+      this.gameName = GameName.Majority;
+      this.configIsValid = target > 1;
     }
   }
 

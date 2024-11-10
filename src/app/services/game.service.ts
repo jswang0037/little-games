@@ -9,7 +9,8 @@ export enum GameType {
 }
 export enum GameName {
   CountDown = 'game-countdown',
-  Bingo = 'game-bingo'
+  Bingo = 'game-bingo',
+  Majority = 'game-majority',
 }
 export enum GameStatus {
   Waiting = 'Waiting',
@@ -18,11 +19,17 @@ export enum GameStatus {
   Calculating = 'Calculating',
   Finished = 'Finished',
 }
+export enum Side {
+  Left = 'Left',
+  Right = 'Right',
+}
 export interface GameResult {
   player: UserAttr;
-  value: number;
+  value?: number;
+  side?: Side;
+  round?: number;
 }
-export interface CountDownConfig{
+export interface SingleTargetConfig{
   target: number;
 }
 export interface GameCreateAttr {
@@ -32,9 +39,9 @@ export interface GameCreateAttr {
   adminId: string;
   playerIds: string[];
   players: UserAttr[];
-  maxPlayers: number;
   results: GameResult[];
-  config: CountDownConfig;
+  config: SingleTargetConfig;
+  round?: number;
 }
 export type GameAttr = GameCreateAttr & GeneralAttr & IdAttr;
 

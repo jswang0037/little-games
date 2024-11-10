@@ -33,6 +33,13 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'game-type': '遊戲類型',
     'game-config': '遊戲設定',
     'name-setting': '名稱設定',
+    'game-majority': '多數決',
+    'majority-target': '存活人數',
+    'majority-desc-1': '輪流發問並選擇，多數者生存。直到最後剩下',
+    'majority-desc-2': '人為止',
+    'player-not-enough': '玩家人數不足',
+    'round-desc-1': '第',
+    'round-desc-2': '回合'
   },
   'en': {
     'title': 'Little Games',
@@ -68,5 +75,12 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'game-type': 'Game Type',
     'game-config': 'Game Config',
     'name-setting': 'Name Setting',
+    'game-majority': 'Majority',
+    'majority-target': 'Survivors',
+    'majority-desc-1': 'Take turns asking questions and choosing, the majority survives. Until only ',
+    'majority-desc-2': 'people remain.',
+    'player-not-enough': 'Player Not Enough',
+    'round-desc-1': 'Round ',
+    'round-desc-2': ''
   },
 }

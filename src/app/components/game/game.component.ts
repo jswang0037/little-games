@@ -30,7 +30,7 @@ export class GameComponent implements OnInit{
   GameStatus = GameStatus;
   GameName = GameName;
   readyUserCount = 0
-  host = "https://little-games-a78c1.web.app";
+  host = "https://little-games-5491a.web.app";
   startTime = 0;
   endTime = 0;
   count = 0;
@@ -65,7 +65,8 @@ export class GameComponent implements OnInit{
           this.checkGame()
         }
         if(this.game.status === GameStatus.Calculating){
-          this.game.results.sort((a, b) => Math.abs(a.value - target) - Math.abs(b.value - target));
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.game.results.sort((a, b) => Math.abs(a.value! - target) - Math.abs(b.value! - target));
           this.game.status = GameStatus.Finished;
           this.gameService.updateGame(this.game.id, this.game)
         }
@@ -76,12 +77,19 @@ export class GameComponent implements OnInit{
   }
 
   gameStart(){
-    this.isLogged = false;
-    this.isReady = false;
-    this.startTime = Timestamp.now().toMillis();
-    this.interval = setInterval(() => {
-      this.count  =  ((Timestamp.now().toMillis() - this.startTime) / 1000);
-    }, 1)
+    if(this.game){
+      if(this.game.name === GameName.CountDown){
+        this.isLogged = false;
+        this.isReady = false;
+        this.startTime = Timestamp.now().toMillis();
+        this.interval = setInterval(() => {
+          this.count  =  ((Timestamp.now().toMillis() - this.startTime) / 1000);
+        }, 1)
+      }else if(this.game.name === GameName.Majority){
+        this.game.round = 1;
+        this.gameService.updateGame(this.game.id, this.game)
+      }
+    }
   }
 
   async logPlayerResult(){
@@ -101,11 +109,13 @@ export class GameComponent implements OnInit{
 
   checkGame(){
     if(this.game && this.game.status === GameStatus.Playing){
-      this.resultCount = this.game.results.length;
-      if(this.game.players.length === this.game.results.length){
-        this.game.status = GameStatus.Calculating;
-        clearInterval(this.interval);
-        this.gameService.updateGame(this.game.id, this.game)
+      if(this.game.name === GameName.CountDown){
+        this.resultCount = this.game.results.length;
+        if(this.game.players.length === this.game.results.length){
+          clearInterval(this.interval);
+          this.game.status = GameStatus.Calculating;
+          this.gameService.updateGame(this.game.id, this.game)
+        }
       }
     }
   }
