@@ -28,6 +28,7 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'Waiting': '等待加入',
     'Finished': '已結束',
     'Playing': '進行中',
+    'Calculating': '結算中',
     'how-to-play': '遊玩方式',
     'wait-for-other-player-done': '等待其他玩家完成...',
     'game-type': '遊戲類型',
@@ -39,7 +40,9 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'majority-desc-2': '人為止',
     'player-not-enough': '玩家人數不足',
     'round-desc-1': '第',
-    'round-desc-2': '回合'
+    'round-desc-2': '回合',
+    'waiting-for-next-round-start': '等待下一回合開始...',
+    'next-round': '下一回合',
   },
   'en': {
     'title': 'Little Games',
@@ -70,6 +73,7 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'Waiting': 'Waiting',
     'Finished': 'Finished',
     'Playing': 'Playing',
+    'Calculating': 'Calculating',
     'how-to-play': 'How to Play',
     'wait-for-other-player-done': 'Waiting for other players to finish...',
     'game-type': 'Game Type',
@@ -81,6 +85,8 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'majority-desc-2': 'people remain.',
     'player-not-enough': 'Player Not Enough',
     'round-desc-1': 'Round ',
-    'round-desc-2': ''
+    'round-desc-2': '',
+    'waiting-for-next-round-start': 'Waiting for next round to start...',
+    'next-round': 'Next Round'
   },
 }

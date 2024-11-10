@@ -30,6 +30,7 @@
             class="badge"
             [class.text-bg-primary]="game.status === GameStatus.Waiting"
             [class.text-bg-success]="game.status === GameStatus.Playing"
+            [class.text-bg-info]="game.status === GameStatus.Calculating"
             [class.text-bg-secondary]="game.status === GameStatus.Finished"
             [innerText]="languagePack[language][game.status]">
           </span>

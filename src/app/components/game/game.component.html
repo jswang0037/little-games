@@ -89,20 +89,71 @@
       </div>
       <!-- Game: Majority -->
       <div *ngIf="game.name === GameName.Majority">
-        <!-- Countdown Number -->
+        <!-- Round -->
         <div class="d-flex justify-content-center">
           <h2 [innerText]="languagePack[language]['round-desc-1'] + game.round + languagePack[language]['round-desc-2']"></h2>
         </div>
-        <div>
-          <button class="btn btn-success">f</button>
+        <div class="d-flex justify-content-between">
+          <div class="w-50 m-1">
+            <button id="button-left" class="btn btn-success w-100 border-2" style="height: 10rem;" (click)="logPlayerResult('left')" [disabled]="isLogged || !isRemain" [class.border-black]="side===Side.Left"> </button>
+          </div>
+          <div class="w-50 m-1">
+            <button id="button-right" class="btn btn-danger w-100 border-2" style="height: 10rem;" (click)="logPlayerResult('right')" [disabled]="isLogged || !isRemain" [class.border-black]="side===Side.Right"> </button>
+          </div>
         </div>
         <!-- Other Player Info -->
         <div
-          *ngIf="isLogged"
+          *ngIf="isLogged || !isRemain"
           class="alert alert-info mt-2"
           role="alert"
-          [innerText]="languagePack[language]['wait-for-other-player-done'] + ' (' + game.results.length + '/' + game.players.length + ')'"
+          [innerText]="languagePack[language]['wait-for-other-player-done'] + ' (' + loggedPlayerCount + '/' + remainPlayerCount + ')'"
         ></div>
+      </div>
+    </div>
+    <!-- Calculating -->
+    <div *ngIf="game.status === GameStatus.Calculating">
+      <!-- Game: Majority -->
+      <div *ngIf="game.name === GameName.Majority">
+        <!-- Next Round -->
+        <div class="alert alert-info" role="alert" [innerText]="languagePack[language]['waiting-for-next-round-start']"></div><!-- Action Buttons  -->
+        <div class="d-flex justify-content-end mt-2">
+          <button *ngIf="game.adminId === user.id" [innerText]="languagePack[language]['next-round']" class="btn btn-primary" (click)="nextRound()"></button>
+        </div>
+        <!-- Round -->
+        <div class="d-flex justify-content-center">
+          <h2 [innerText]="languagePack[language]['round-desc-1'] + game.round + languagePack[language]['round-desc-2']"></h2>
+        </div>
+        <!-- Result -->
+        <div class="d-flex justify-content-between">
+          <div class="w-50 m-1">
+            <button id="button-left" class="btn btn-success w-100 border-2 fs-1" style="height: 10rem;" [innerText]="leftCount"></button>
+            <div *ngFor="let playerResult of game.results;">
+              <div
+                *ngIf="playerResult.side === Side.Left && playerResult.round === game.round"
+                class="border border-2 p-2 rounded my-1 player d-flex justify-content-between align-items-center w-100"
+              >
+                <div class="d-flex justify-content-between align-items-center">
+                  <img alt="user-icon" class="rounded-circle user-icon" [src]="playerResult.player.imgUrl">
+                  <span class="ms-2 text-truncate d-inline-block" [innerText]="playerResult.player.id===user.id? languagePack[language]['you'] : playerResult.player.name"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-50 m-1">
+            <button id="button-right" class="btn btn-danger w-100 border-2 fs-1" style="height: 10rem;" [innerText]="rightCount"></button>
+            <div *ngFor="let playerResult of game.results;">
+              <div
+                *ngIf="playerResult.side === Side.Right && playerResult.round === game.round"
+                class="border border-2 p-2 rounded my-1 player d-flex justify-content-between align-items-center w-100"
+              >
+                <div class="d-flex justify-content-between align-items-center">
+                  <img alt="user-icon" class="rounded-circle user-icon" [src]="playerResult.player.imgUrl">
+                  <span class="ms-2 text-truncate d-inline-block" [innerText]="playerResult.player.id===user.id? languagePack[language]['you'] : playerResult.player.name"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Finished -->
@@ -122,23 +173,41 @@
       </div>
       <!-- Player Result -->
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 px-2 mt-2">
-        <div
-          *ngFor="let playerResult of game.results; let i = index"
-          class="border border-2 p-2 rounded m-1 player d-flex justify-content-between align-items-center w-75"
-          [class.border-success]="i===0"
-        >
-          <div class="d-flex justify-content-between align-items-center">
-            <img alt="user-icon" class="rounded-circle user-icon" [src]="playerResult.player.imgUrl">
-            <span class="ms-2 text-truncate d-inline-block" [innerText]="playerResult.player.id===user.id? languagePack[language]['you'] : playerResult.player.name"></span>
+        <!-- Game: Countdown -->
+        <div *ngIf="game.name === GameName.CountDown">
+          <div
+            *ngFor="let playerResult of playerResult"
+            class="border border-2 p-2 rounded m-1 player d-flex justify-content-between align-items-center w-75"
+          >
+            <div class="d-flex justify-content-between align-items-center">
+              <img alt="user-icon" class="rounded-circle user-icon" [src]="playerResult.player.imgUrl">
+              <span class="ms-2 text-truncate d-inline-block" [innerText]="playerResult.player.id===user.id? languagePack[language]['you'] : playerResult.player.name"></span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="ms-2 d-inline-block" [innerText]="playerResult.value  | number: '1.2-2' "></span>
+              <span
+                class="ms-2 d-inline-block"
+                *ngIf="playerResult.value"
+                [class.text-success]="playerResult.value >= game.config.target"
+                [class.text-danger]="playerResult.value < game.config.target"
+                [innerText]="'(' + (playerResult.value >= game.config.target? '+' : '') + ((playerResult.value - game.config.target)  | number: '1.2-2')  + ')'"></span>
+            </div>
           </div>
-          <div class="d-flex justify-content-between align-items-center">
-            <span class="ms-2 d-inline-block" [innerText]="playerResult.value  | number: '1.2-2' "></span>
-            <span
-              class="ms-2 d-inline-block"
-              *ngIf="playerResult.value"
-              [class.text-success]="playerResult.value >= game.config.target"
-              [class.text-danger]="playerResult.value < game.config.target"
-              [innerText]="'(' + (playerResult.value >= game.config.target? '+' : '') + ((playerResult.value - game.config.target)  | number: '1.2-2')  + ')'"></span>
+        </div>
+        <!-- Game: Majority -->
+        <div *ngIf="game.name === GameName.Majority">
+          <div
+            *ngFor="let playerResult of playerResult; let i = index"
+            class="border border-2 p-2 rounded m-1 player d-flex justify-content-between align-items-center w-75"
+            [class.border-success]="playerResult.round === (game.round! + 1)"
+          >
+            <div class="d-flex justify-content-between align-items-center">
+              <img alt="user-icon" class="rounded-circle user-icon" [src]="playerResult.player.imgUrl">
+              <span class="ms-2 text-truncate d-inline-block" [innerText]="playerResult.player.id===user.id? languagePack[language]['you'] : playerResult.player.name"></span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="ms-2 d-inline-block" [innerText]="languagePack[language]['round-desc-1'] + playerResult.round + languagePack[language]['round-desc-2']"></span>
+            </div>
           </div>
         </div>
       </div>

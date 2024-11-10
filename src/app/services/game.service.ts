@@ -65,6 +65,7 @@ export class GameService {
     return await this.firestoreService.getDataById(Tables.Game, id);
   }
   async updateGame(id: string, gameAttr: Partial<GameAttr>): Promise<void> {
+    console.log('updateGame', id, gameAttr)
     await this.firestoreService.updateData(Tables.Game, id, gameAttr)
   }
   async addPlayerToGame(id: string, player: UserAttr): Promise<void> {
@@ -102,7 +103,6 @@ export class GameService {
     }
   }
   async getGamesIncludeUser(playerId: string): Promise<GameAttr[]> {
-    console.log('getGamesIncludeUser', playerId)
     return await this.firestoreService.getDocumentsByQuery(Tables.Game, [where('playerIds', 'array-contains', playerId)]);
   }
 }
