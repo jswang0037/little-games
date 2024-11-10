@@ -29,13 +29,13 @@ import { UserSettingComponent } from './components/user-setting/user-setting.com
     AppRoutingModule,
     provideFirebaseApp(() => initializeApp(
       {
-        apiKey: "AIzaSyD7drFmFJ0vOqjYjeRtK6mufVAnY_mj1K0",
-        authDomain: "little-games-5491a.firebaseapp.com",
-        projectId: "little-games-5491a",
-        storageBucket: "little-games-5491a.firebasestorage.app",
-        messagingSenderId: "714814843570",
-        appId: "1:714814843570:web:9f681703e48933b56637ab",
-        measurementId: "G-6DMTHF93B8"
+        apiKey: "AIzaSyBPXWdWdIWOonMLe5-G4nvtecf_sIfDwl8",
+        authDomain: "little-games-a78c1.firebaseapp.com",
+        projectId: "little-games-a78c1",
+        storageBucket: "little-games-a78c1.firebasestorage.app",
+        messagingSenderId: "604049550614",
+        appId: "1:604049550614:web:2e911b7ea7b0ed57bef437",
+        measurementId: "G-7TGKKYXF3T"
       }
     )),
     provideFirestore(() => getFirestore())
