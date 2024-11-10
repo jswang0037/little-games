@@ -7,5 +7,25 @@
       (click)="isSettingName = true"
     ></button>
   </div>
+  <div *ngIf="!isProduction" class="d-flex justify-content-between mt-2 w-100">
+    <button
+    *ngIf="!isSettingName"
+    class="btn btn-info w-25"
+    [innerText]="'Player 1'"
+    (click)="setProfile('test-user-1')"
+    ></button>
+    <button
+      *ngIf="!isSettingName"
+      class="btn btn-info w-25"
+      [innerText]="'Player 2'"
+      (click)="setProfile('test-user-2')"
+      ></button>
+    <button
+      *ngIf="!isSettingName"
+      class="btn btn-info w-25"
+      [innerText]="'Player 3'"
+      (click)="setProfile('test-user-3')"
+      ></button>
+  </div>
   <app-user *ngIf="isSettingName"></app-user>
 </div>

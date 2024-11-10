@@ -1,16 +1,16 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { GameComponent } from './components/game/game.component';
+import { GameCreateComponent } from './components/game-create/game-create.component';
+import { GameNotFoundComponent } from './components/game-not-found/game-not-found.component';
 import { MainComponent } from './components/main/main.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { NgModule } from '@angular/core';
 import { UserComponent } from './components/user/user.component';
-import { GameComponent } from './components/game/game.component';
-import { GameNotFoundComponent } from './components/game-not-found/game-not-found.component';
-import { GameCreateComponent } from './components/game-create/game-create.component';
 import { UserSettingComponent } from './components/user-setting/user-setting.component';
 
 @NgModule({
@@ -27,7 +27,17 @@ import { UserSettingComponent } from './components/user-setting/user-setting.com
   imports: [
     BrowserModule,
     AppRoutingModule,
-    provideFirebaseApp(() => initializeApp({"projectId":"little-games-a78c1","appId":"1:604049550614:web:2e911b7ea7b0ed57bef437","storageBucket":"little-games-a78c1.appspot.com","apiKey":"AIzaSyBPXWdWdIWOonMLe5-G4nvtecf_sIfDwl8","authDomain":"little-games-a78c1.firebaseapp.com","messagingSenderId":"604049550614","measurementId":"G-7TGKKYXF3T"})),
+    provideFirebaseApp(() => initializeApp(
+      {
+        apiKey: "AIzaSyD7drFmFJ0vOqjYjeRtK6mufVAnY_mj1K0",
+        authDomain: "little-games-5491a.firebaseapp.com",
+        projectId: "little-games-5491a",
+        storageBucket: "little-games-5491a.firebasestorage.app",
+        messagingSenderId: "714814843570",
+        appId: "1:714814843570:web:9f681703e48933b56637ab",
+        measurementId: "G-6DMTHF93B8"
+      }
+    )),
     provideFirestore(() => getFirestore())
   ],
   providers: [],
