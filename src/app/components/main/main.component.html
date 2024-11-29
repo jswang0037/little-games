@@ -1,8 +1,16 @@
 <div *ngIf="user" class="w-100 p-2" id="div-main">
   <app-user *ngIf="user.created.toMillis() === user.modified.toMillis()"></app-user>
   <div *ngIf="user.created.toMillis() !== user.modified.toMillis()">
+    <!-- Playing History -->
+    <div class="d-flex justify-content-between">
+      <h2 [innerText]="languagePack[language]['history']"></h2>
+      <a href="https://lin.ee/qMAlxRr">
+        <img *ngIf="language === 'zh-TW'" alt="加入好友" height="36" src="https://scdn.line-apps.com/n/line_add_friends/btn/zh-Hant.png">
+        <img *ngIf="language === 'en'" alt="加入好友" height="36" src="https://scdn.line-apps.com/n/line_add_friends/btn/en.png">
+      </a>
+    </div>
     <!-- Create New Game Buttons -->
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-between">
       <button
         class="btn btn-success"
         [routerLink]="['/', 'create-game']"
@@ -20,8 +28,6 @@
         ></span>
       </button>
     </div>
-    <!-- Playing History -->
-    <h2 class="mt-2" [innerText]="languagePack[language]['history']"></h2>
     <div class="row p-2">
       <div *ngFor="let game of games" class="border border-2 p-2" [routerLink]="['/game', game.id]">
         <div class="d-flex justify-content-between align-items-center">
