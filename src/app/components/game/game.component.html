@@ -58,6 +58,17 @@
     </div>
     <!-- Playing -->
     <div *ngIf="game.status === GameStatus.Playing">
+      <!-- Action Buttons  -->
+      <div class="d-flex justify-content-between mt-2">
+        <button
+          *ngIf="game.adminId === user.id"
+          class="btn btn-primary"
+          (click)="restart()"
+        >
+          <i class="bi bi-arrow-clockwise"></i>
+          <span class="ms-2" [innerText]="languagePack[language]['restart']"></span>
+        </button>
+      </div>
       <!-- Game: Countdown -->
       <div *ngIf="game.name === GameName.CountDown">
         <!-- Countdown Number -->
