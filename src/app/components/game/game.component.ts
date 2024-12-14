@@ -9,11 +9,6 @@ import { SharedService } from 'src/app/services/shared.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { UserAttr } from 'src/app/services/user.service';
 
-interface CountDownResult{
-  player: UserAttr;
-  round: number;
-}
-
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
@@ -35,7 +30,7 @@ export class GameComponent implements OnInit{
   GameStatus = GameStatus;
   GameName = GameName;
   readyUserCount = 0
-  host = "https://little-games-5491a.web.app";
+  host = "https://little-games-a78c1.web.app/";
   startTime = 0;
   endTime = 0;
   count = 0;
