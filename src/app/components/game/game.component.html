@@ -1,6 +1,20 @@
 <div *ngIf="game && user" class="w-100 p-2" id="div-game">
   <app-user *ngIf="user.created.toMillis() === user.modified.toMillis()"></app-user>
   <div *ngIf="user.created.toMillis() !== user.modified.toMillis()">
+     <!-- Admin Action Buttons  -->
+     <div *ngIf="game.adminId === user.id" class="d-flex justify-content-between mt-2">
+      <button
+        class="btn btn-primary"
+        (click)="restart()"
+      >
+        <i class="bi bi-arrow-clockwise"></i>
+        <span class="ms-2" [innerText]="languagePack[language]['restart']"></span>
+      </button>
+      <button class="btn btn-danger" (click)="deleteGame(game)">
+        <i class="bi bi-trash"></i>
+        <span class="ms-2" [innerText]="languagePack[language]['delete']" ></span>
+      </button>
+    </div>
     <!-- Waiting -->
     <div *ngIf="game.status === GameStatus.Waiting">
       <!-- Waiting Info -->
@@ -58,20 +72,6 @@
     </div>
     <!-- Playing -->
     <div *ngIf="game.status === GameStatus.Playing">
-      <!-- Admin Action Buttons  -->
-      <div *ngIf="game.adminId === user.id" class="d-flex justify-content-between mt-2">
-        <button
-          class="btn btn-primary"
-          (click)="restart()"
-        >
-          <i class="bi bi-arrow-clockwise"></i>
-          <span class="ms-2" [innerText]="languagePack[language]['restart']"></span>
-        </button>
-        <button class="btn btn-danger" (click)="deleteGame(game)">
-          <i class="bi bi-trash"></i>
-          <span class="ms-2" [innerText]="languagePack[language]['delete']" ></span>
-        </button>
-      </div>
       <!-- Game: Countdown -->
       <div *ngIf="game.name === GameName.CountDown">
         <!-- Countdown Number -->
@@ -174,20 +174,6 @@
     <div *ngIf="game.status === GameStatus.Finished">
       <!-- Results -->
       <h2 [innerText]="languagePack[language]['results']" class="mt-2"></h2>
-      <!-- Admin Action Buttons  -->
-      <div *ngIf="game.adminId === user.id" class="d-flex justify-content-between mt-2">
-        <button
-          class="btn btn-primary"
-          (click)="restart()"
-        >
-          <i class="bi bi-arrow-clockwise"></i>
-          <span class="ms-2" [innerText]="languagePack[language]['restart']"></span>
-        </button>
-        <button class="btn btn-danger" (click)="deleteGame(game)">
-          <i class="bi bi-trash"></i>
-          <span class="ms-2" [innerText]="languagePack[language]['delete']" ></span>
-        </button>
-      </div>
       <!-- Player Result -->
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 px-2 mt-2">
         <!-- Game: Countdown -->
