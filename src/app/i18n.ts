@@ -43,6 +43,8 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'round-desc-2': '回合',
     'waiting-for-next-round-start': '等待下一回合開始...',
     'next-round': '下一回合',
+    'delete': '刪除',
+    'this': '這個'
   },
   'en': {
     'title': 'Little Games',
@@ -87,6 +89,8 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'round-desc-1': 'Round ',
     'round-desc-2': '',
     'waiting-for-next-round-start': 'Waiting for next round to start...',
-    'next-round': 'Next Round'
+    'next-round': 'Next Round',
+    'delete': 'Delete',
+    'this': 'this'
   },
 }

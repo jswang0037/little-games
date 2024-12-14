@@ -105,4 +105,7 @@ export class GameService {
   async getGamesIncludeUser(playerId: string): Promise<GameAttr[]> {
     return await this.firestoreService.getDocumentsByQuery(Tables.Game, [where('playerIds', 'array-contains', playerId)]);
   }
+  async deleteGame(id: string): Promise<void> {
+    await this.firestoreService.deleteData(Tables.Game, id);
+  }
 }

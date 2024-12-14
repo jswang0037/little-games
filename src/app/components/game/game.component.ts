@@ -52,6 +52,15 @@ export class GameComponent implements OnInit{
     this.game = await this.gameService.getGameById(gameId);
   }
 
+  async deleteGame(game: GameAttr){
+    const confirmed = window.confirm(`${LanguagePack[this.language]['delete']}${LanguagePack[this.language]['space']}${LanguagePack[this.language]['this']}${LanguagePack[this.language]['space']}${LanguagePack[this.language]['game']}?`);
+    if(!confirmed){
+      return
+    }
+    await this.gameService.deleteGame(game.id)
+    this.router.navigate(['/'])
+  }
+
   subscribeGame(gameId: string){
     this.gameService.subscribeGame(gameId, (g) => {
       this.game = g as GameAttr;
