@@ -1,13 +1,206 @@
+// General styles for the game component can remain here
 
-.user-icon{
-  width: 3rem;
-  height: 3rem;
+// Styles for Color Challenge Game
+.color-challenge-container {
+  text-align: center; // Center align content within the CC container
+
+  .cc-instruction {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    background-color: #f8f9fa; // Light background for instruction
+    border-radius: 0.25rem;
+    border: 1px solid #dee2e6;
+  }
+
+  .cc-challenge-text {
+    font-size: 3.5rem; // Make the challenge text large
+    font-weight: bold;
+    padding: 1rem;
+    margin: 1.5rem auto;
+    min-height: 120px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #ccc; // Clearer border
+    border-radius: 8px;
+    max-width: 80%;
+    line-height: 1.2; // Adjust line height if text wraps
+    text-shadow: // Add a subtle shadow to make text pop, especially if colors are similar
+      1px 1px 0 #fff,
+      -1px -1px 0 #fff,
+      1px -1px 0 #fff,
+      -1px 1px 0 #fff,
+      2px 2px 3px rgba(0,0,0,0.2); // Softer shadow
+  }
+
+  .cc-timer {
+    font-size: 1.8rem; // Larger timer
+    color: #dc3545; // Make timer red for urgency
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+  }
+
+  .cc-options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); // Responsive grid, slightly larger buttons
+    gap: 15px; // More space between buttons
+    padding: 15px;
+    max-width: 650px; 
+    margin: 1rem auto; 
+  }
+
+  .cc-color-option {
+    padding: 1.2rem 0.5rem; 
+    border: 2px solid #555; // Darker border for better definition
+    border-radius: 10px; // More rounded buttons
+    font-size: 1.2rem; 
+    font-weight: bold;
+    color: white; 
+    text-shadow: 1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black, -1px 1px 1px black; // Ensure text is visible
+    transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.2s;
+    cursor: pointer;
+    min-height: 70px; // Ensure buttons have a good height
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-3px) scale(1.03); // More pronounced hover effect
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+      border-color: #000; // Darken border on hover
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0px) scale(1);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.5; // Slightly less opaque when disabled
+      cursor: not-allowed;
+      // Keep background color for disabled state to show what was picked or options.
+      box-shadow: none;
+      transform: none;
+    }
+
+    // cc-button-text is a span inside the button
+    // The text-shadow on the button itself should mostly handle visibility.
+    // If specific styling for the span is needed, it can be added here.
+    // .cc-button-text { }
+  }
+  
+  // Calculating State & Finished State
+  .list-group-item {
+    margin-bottom: 0.5rem;
+    border-radius: 0.25rem;
+    .badge {
+      font-size: 0.9rem;
+    }
+    .player-choice-display { // Class for the span showing player's choice color
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        vertical-align: middle;
+        margin-left: 5px;
+    }
+  }
+  .correct-answer-display { // Class for span showing correct answer
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-weight: bold;
+  }
+
+  // Finished State - Score Display
+  .list-group-item strong { 
+    font-size: 1.1rem;
+  }
+  .badge.bg-primary.rounded-pill { 
+    font-size: 1rem;
+    padding: 0.5em 0.75em;
+  }
 }
-.player{
-  width: 10rem;
+
+// Ensure existing styles for .user-icon, .player, etc., are compatible or adjust as needed.
+.user-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: cover; 
+  border-radius: 50%; // Ensure it's always a circle
+  margin-right: 10px;
 }
-.count{
-  color: red;
-  font-size: 5rem;
-  font-weight: bold;
+
+.player{ // This is used in player lists
+  // max-width: 15rem; // from original, might be too restrictive for some views
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem; // Add some margin if used in a column
+}
+
+/* Styles from original game.component.scss that might be relevant to override or ensure compatibility */
+.count { /* For Countdown game */
+  font-size: 10rem;
+}
+
+#button-left{ /* For Majority game */
+  background-color: #198754;
+  color: #fff;
+}
+#button-right{ /* For Majority game */
+  background-color: #dc3545;
+  color: #fff;
+}
+
+
+// Responsive adjustments for smaller screens
+@media (max-width: 768px) { // Target tablets and phones
+  .color-challenge-container {
+    .cc-challenge-text {
+      font-size: 2.8rem;
+    }
+    .cc-options-grid {
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 10px;
+    }
+    .cc-color-option {
+      font-size: 1rem;
+      min-height: 60px;
+    }
+  }
+}
+
+@media (max-width: 576px) { // Target phones
+  .color-challenge-container {
+    .cc-instruction {
+      font-size: 1rem;
+    }
+    .cc-challenge-text {
+      font-size: 2.2rem; 
+      min-height: 100px;
+      max-width: 90%;
+    }
+    .cc-timer {
+        font-size: 1.5rem;
+    }
+    .cc-options-grid {
+      grid-template-columns: repeat(2, 1fr); // Force 2 buttons per row on small screens
+      gap: 10px;
+    }
+    .cc-color-option {
+      font-size: 0.9rem; // Smaller font for buttons on small screens
+      padding: 0.8rem 0.3rem;
+      min-height: 50px;
+    }
+  }
+  .list-group-item { // Reduce padding/font for results on small screens
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .user-icon {
+    width: 30px;
+    height: 30px;
+  }
 }

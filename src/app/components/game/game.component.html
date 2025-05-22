@@ -70,8 +70,144 @@
         </div>
       </div>
     </div>
-    <!-- Playing -->
-    <div *ngIf="game.status === GameStatus.Playing">
+
+    <!-- Color Challenge Game UI -->
+    <div *ngIf="game.name === GameName.COLOR_CHALLENGE" class="color-challenge-container">
+      <ng-container [ngSwitch]="game.status">
+
+        <!-- WAITING State for Color Challenge -->
+        <div *ngSwitchCase="GameStatus.Waiting">
+          <!-- Re-use existing waiting room structure; only customize description -->
+          <div *ngIf="readyUserCount !== game.players.length" class="alert alert-info" role="alert" [innerText]="languagePack[language]['waiting-for-players']"></div>
+          <div *ngIf="readyUserCount === game.players.length && game.adminId !== user.id" class="alert alert-success" role="alert" [innerText]="languagePack[language]['waiting-for-admin-to-start']"></div>
+          <div *ngIf="readyUserCount === game.players.length && game.adminId === user.id" class="alert alert-success" role="alert">{{ languagePack[language]['all-players-ready-admin-start'] || 'All players ready. Admin can start the game!' }}</div>
+          
+          <!-- Game Description -->
+          <h2 [innerText]="languagePack[language]['how-to-play']"></h2>
+          <p [innerText]="languagePack[language]['color-challenge-description-1'] || 'Quickly identify the color or text that matches the instruction. The player with the highest score wins.'"></p>
+          <p><strong>{{ languagePack[language]['color-challenge-rounds'] || 'Rounds' }}:</strong> {{ game.config.rounds }}</p>
+          <p><strong>{{ languagePack[language]['color-challenge-time-limit-per-round'] || 'Time Limit Per Round' }}:</strong> {{ game.config.timeLimitPerRound }}s</p>
+
+          <!-- Players List (re-use existing) -->
+          <h2 class="mt-2" [innerText]="languagePack[language]['players'] + '   ' + readyUserCount +  '/' + game.players.length"></h2>
+          <div class="d-flex justify-content-between mt-2">
+            <button class="btn btn-success" (click)="sendInvitation(game)">
+              <i class="bi bi-share"></i>
+              <span class="ms-2" [innerText]="languagePack[language]['send-invitation']"></span>
+            </button>
+            <button *ngIf="!isReady" class="btn btn-success" (click)="ready()">
+              <i class="bi bi-check-lg"></i>
+              <span class="ms-2" [innerText]="languagePack[language]['ready']"></span>
+            </button>
+            <button
+              *ngIf="isReady && game.adminId === user.id"
+              class="btn btn-primary"
+              (click)="start()"
+              [disabled]="readyUserCount !== game.players.length"
+            >
+              <i class="bi bi-play"></i>
+              <span class="ms-2" [innerText]="languagePack[language]['start']"></span>
+            </button>
+          </div>
+          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 px-2 mt-2">
+            <div
+              *ngFor="let player of game.players"
+              class="border border-2 p-2 rounded m-1 player align-items-center d-flex"
+              [class.border-success]="player.ready"
+            >
+              <img alt="user-icon" class="rounded-circle user-icon" [src]="player.imgUrl">
+              <span class="ms-2 text-truncate d-inline-block" [innerText]="player.id===user.id? languagePack[language]['you'] : player.name"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PLAYING State for Color Challenge -->
+        <div *ngSwitchCase="GameStatus.Playing" class="text-center">
+          <div class="my-3">
+            <h4 [innerText]="languagePack[language]['round'] + ' ' + game.round + ' / ' + game.config.rounds"></h4>
+          </div>
+          <div class="cc-instruction my-3 fs-5">
+            {{ languagePack[language][currentInstructionType === InstructionType.TextColor ? 'instructionTextColor' : 'instructionTextMeaning'] }}
+          </div>
+          <div class="cc-challenge-text my-4" [style.color]="textColor">
+            {{ textToDisplay }}
+          </div>
+          <div class="cc-timer my-3 fs-4">
+            {{ languagePack[language]['time-remaining'] || 'Time' }}: {{ roundTimeRemaining }}s
+          </div>
+          <div class="cc-options-grid my-3">
+            <button
+              *ngFor="let colorCss of colorOptions"
+              class="btn cc-color-option m-2"
+              [style.background-color]="colorCss"
+              (click)="logPlayerResult(colorCss)"
+              [disabled]="playerRoundData.has(user.id) || roundTimeRemaining <= 0"
+            >
+              <span class="cc-button-text">{{ languagePack[language]['color_' + getColorKeyForLang(colorCss)] || getDisplayNameForCss(colorCss) }}</span>
+            </button>
+          </div>
+           <div *ngIf="playerRoundData.has(user.id)" class="alert alert-info mt-3">
+            {{ languagePack[language]['cc-you-answered'] || 'You have answered! Waiting for other players...' }}
+          </div>
+        </div>
+
+        <!-- CALCULATING State for Color Challenge -->
+        <div *ngSwitchCase="GameStatus.Calculating" class="text-center">
+          <h3 class="my-3">{{ languagePack[language]['calculating-results'] || 'Calculating Results...' }}</h3>
+          <div *ngIf="correctAnswer" class="my-3 fs-5">
+            {{ languagePack[language]['correctAnswerWas'] }}
+            <span class="fw-bold" [style.color]="correctAnswer">{{ getDisplayNameForCss(correctAnswer) }}</span>
+          </div>
+          
+          <div class="list-group my-3">
+            <div *ngFor="let p of game.players" class="list-group-item">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{ p.id === user.id ? languagePack[language]['you'] : p.name }}</h5>
+                <small *ngIf="playerRoundData.get(p.id) as roundInfo">
+                  <span *ngIf="roundInfo.correct" class="badge bg-success">{{ languagePack[language]['correct'] || 'Correct' }}</span>
+                  <span *ngIf="!roundInfo.correct" class="badge bg-danger">{{ languagePack[language]['incorrect'] || 'Incorrect' }}</span>
+                </small>
+              </div>
+              <p class="mb-1" *ngIf="playerRoundData.get(p.id) as roundInfo">
+                {{ languagePack[language]['yourChoice'] }}
+                <span class="fw-bold" [style.color]="roundInfo.choice">{{ getDisplayNameForCss(roundInfo.choice) }}</span>
+                ({{ languagePack[language]['cc-time-remaining'] || 'Time left' }}: {{roundInfo.time}}s)
+              </p>
+               <p class="mb-1" *ngIf="!playerRoundData.get(p.id)">
+                {{ languagePack[language]['cc-no-answer'] || 'No answer submitted.' }}
+              </p>
+            </div>
+          </div>
+
+          <div *ngIf="game.adminId === user.id && game.round <= game.config.rounds" class="my-3">
+            <button class="btn btn-primary" (click)="proceedToNextRoundOrFinish()">
+              {{ game.round < game.config.rounds ? (languagePack[language]['next-round'] || 'Next Round') : (languagePack[language]['show-final-results'] || 'Show Final Results') }}
+            </button>
+          </div>
+           <div *ngIf="game.adminId !== user.id" class="alert alert-info">
+             {{ languagePack[language]['waiting-for-admin-to-proceed'] || 'Waiting for admin to proceed...'}}
+           </div>
+        </div>
+
+        <!-- FINISHED State for Color Challenge -->
+        <div *ngSwitchCase="GameStatus.Finished">
+          <h2 [innerText]="languagePack[language]['results']" class="mt-2"></h2>
+          <div class="list-group">
+            <div *ngFor="let res of playerResult; let i = index" class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <img alt="user-icon" class="rounded-circle user-icon me-2" [src]="res.player.imgUrl">
+                <strong class="me-2">{{ i + 1 }}. {{ res.player.id === user.id ? languagePack[language]['you'] : res.player.name }}</strong>
+              </div>
+              <span class="badge bg-primary rounded-pill fs-6">{{ res.score }} {{ languagePack[language]['points'] || 'Points' }}</span>
+            </div>
+          </div>
+          <!-- Admin buttons for restart/delete are already at the top level -->
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Playing (Original for Countdown and Majority) -->
+    <div *ngIf="game.status === GameStatus.Playing && game.name !== GameName.COLOR_CHALLENGE">
       <!-- Game: Countdown -->
       <div *ngIf="game.name === GameName.CountDown">
         <!-- Countdown Number -->

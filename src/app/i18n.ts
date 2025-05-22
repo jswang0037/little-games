@@ -44,7 +44,18 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'waiting-for-next-round-start': '等待下一回合開始...',
     'next-round': '下一回合',
     'delete': '刪除',
-    'this': '這個'
+    'this': '這個',
+    'game-color-challenge': '顏色挑戰',
+    'color-challenge-rounds': '回合數',
+    'color-challenge-time-limit-per-round': '每回合時間限制',
+    'color-challenge-point-correct': '答對得分',
+    'color-challenge-point-incorrect': '答錯扣分',
+    'color-challenge-point-fastest-bonus': '最快獎勵',
+    'color-challenge-instruction-change-per-round': '每回合更換指令',
+    'color-challenge-initial-instruction-type': '初始指令類型',
+    'color-challenge-instruction-type-text': '文字',
+    'color-challenge-instruction-type-color': '顏色',
+    'color-challenge-description-1': '快速找出符合指令的顏色或文字，獲得最高分者獲勝'
   },
   'en': {
     'title': 'Little Games',
@@ -91,6 +102,17 @@ export const LanguagePack: {[key: string]: {[key: string]: string}} = {
     'waiting-for-next-round-start': 'Waiting for next round to start...',
     'next-round': 'Next Round',
     'delete': 'Delete',
-    'this': 'this'
+    'this': 'this',
+    'game-color-challenge': 'Color Challenge',
+    'color-challenge-rounds': 'Rounds',
+    'color-challenge-time-limit-per-round': 'Time Limit Per Round',
+    'color-challenge-point-correct': 'Points for Correct Answer',
+    'color-challenge-point-incorrect': 'Points for Incorrect Answer',
+    'color-challenge-point-fastest-bonus': 'Fastest Answer Bonus',
+    'color-challenge-instruction-change-per-round': 'Change Instruction Per Round',
+    'color-challenge-initial-instruction-type': 'Initial Instruction Type',
+    'color-challenge-instruction-type-text': 'Text',
+    'color-challenge-instruction-type-color': 'Color',
+    'color-challenge-description-1': 'Quickly identify the color or text that matches the instruction. The player with the highest score wins.'
   },
 }

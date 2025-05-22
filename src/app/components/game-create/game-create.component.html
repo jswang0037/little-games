@@ -9,63 +9,119 @@
   <select
     id="select-game-name"
     class="form-select mb-2"
-    (change)="check()"
+    [value]="selectedGameName" 
+    (change)="onGameTypeChange()" 
   >
-    <option disabled selected></option>
     <option
-      [value]="GameName.CountDown"
-      [innerText]="languagePack[language]['game-countdown']"
+      [value]="GameName.COLOR_CHALLENGE"
+      [innerText]="languagePack[language]['game-color-challenge']"
     ></option>
-    <option
-      [value]="GameName.Majority"
-      [innerText]="languagePack[language]['game-majority']"
-    ></option>
+    <!-- Other game types could be listed here if they were part of the original design -->
+    <!-- For now, only Color Challenge is selectable and configurable as per the task -->
   </select>
 
-  <!-- CountDown Config -->
-  <h3 [innerText]="languagePack[language]['game-config']" *ngIf="gameName"></h3>
-  <!-- Game: Countdown -->
-  <div *ngIf="gameName === GameName.CountDown">
-    <span class="font-title-md" [innerText]="languagePack[language]['countdown-target']"></span>
-    <input
-      class="form-control"
-      id="input-target"
-      type="number"
-      min="0"
-      max="60"
-      (change)="validate()"
-      [class.is-valid]="configIsValid"
-      [class.is-invalid]="!configIsValid"
-    >
+  <h3 [innerText]="languagePack[language]['game-config']" *ngIf="selectedGameName === GameName.COLOR_CHALLENGE"></h3>
+
+  <!-- Color Challenge Config -->
+  <div *ngIf="selectedGameName === GameName.COLOR_CHALLENGE">
+    <div class="mb-2">
+      <label for="cc-rounds" class="form-label">{{ languagePack[language]['color-challenge-rounds'] }}</label>
+      <input
+        type="number"
+        id="cc-rounds"
+        class="form-control"
+        [value]="CCConfig.rounds"
+        (input)="updateConfigValue('rounds', $event.target.value, false, true)"
+        min="1"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="cc-timeLimitPerRound" class="form-label">{{ languagePack[language]['color-challenge-time-limit-per-round'] }}</label>
+      <input
+        type="number"
+        id="cc-timeLimitPerRound"
+        class="form-control"
+        [value]="CCConfig.timeLimitPerRound"
+        (input)="updateConfigValue('timeLimitPerRound', $event.target.value, false, true)"
+        min="5"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="cc-pointCorrect" class="form-label">{{ languagePack[language]['color-challenge-point-correct'] }}</label>
+      <input
+        type="number"
+        id="cc-pointCorrect"
+        class="form-control"
+        [value]="CCConfig.pointCorrect"
+        (input)="updateConfigValue('pointCorrect', $event.target.value, false, true)"
+        min="0"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="cc-pointIncorrect" class="form-label">{{ languagePack[language]['color-challenge-point-incorrect'] }}</label>
+      <input
+        type="number"
+        id="cc-pointIncorrect"
+        class="form-control"
+        [value]="CCConfig.pointIncorrect"
+        (input)="updateConfigValue('pointIncorrect', $event.target.value, false, true)"
+        max="0"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="cc-pointFastestBonus" class="form-label">{{ languagePack[language]['color-challenge-point-fastest-bonus'] }}</label>
+      <input
+        type="number"
+        id="cc-pointFastestBonus"
+        class="form-control"
+        [value]="CCConfig.pointFastestBonus"
+        (input)="updateConfigValue('pointFastestBonus', $event.target.value, false, true)"
+        min="0"
+      />
+    </div>
+    <div class="mb-2">
+      <label for="cc-instructionChangePerRound" class="form-label">{{ languagePack[language]['color-challenge-instruction-change-per-round'] }}</label>
+      <select
+        id="cc-instructionChangePerRound"
+        class="form-select"
+        [value]="CCConfig.instructionChangePerRound"
+        (change)="updateConfigValue('instructionChangePerRound', $event.target.value, true)"
+      >
+        <option [value]="true">{{ languagePack[language]['yes'] || 'Yes' }}</option>
+        <option [value]="false">{{ languagePack[language]['no'] || 'No' }}</option>
+      </select>
+    </div>
+    <div class="mb-2">
+      <label for="cc-initialInstructionType" class="form-label">{{ languagePack[language]['color-challenge-initial-instruction-type'] }}</label>
+      <select
+        id="cc-initialInstructionType"
+        class="form-select"
+        [value]="CCConfig.initialInstructionType"
+        (change)="updateConfigValue('initialInstructionType', $event.target.value, false, false)"
+      >
+        <option value="text">{{ languagePack[language]['color-challenge-instruction-type-text'] }}</option>
+        <option value="color">{{ languagePack[language]['color-challenge-instruction-type-color'] }}</option>
+      </select>
+    </div>
   </div>
-  <!-- Game: Majority -->
-  <div *ngIf="gameName === GameName.Majority">
-    <span class="font-title-md" [innerText]="languagePack[language]['majority-target']"></span>
-    <input
-      class="form-control"
-      id="input-target"
-      type="number"
-      min="2"
-      (change)="validate()"
-      [class.is-valid]="configIsValid"
-      [class.is-invalid]="!configIsValid"
-    >
+
+  <!-- Validation Message -->
+  <div *ngIf="selectedGameName === GameName.COLOR_CHALLENGE && !configIsValid" class="alert alert-warning mt-2">
+    {{ languagePack[language]['invalid-config-warning'] || 'Configuration is invalid. Please check the values.' }}
   </div>
 
   <!-- Action Buttons -->
   <div class="d-flex justify-content-between mt-2">
-    <button class="btn btn-secondary" [routerLink]="['/']">
+    <button class="btn btn-secondary" [routerLink]="['/main']">
       <i class="bi bi-backspace"></i>
       <span class="ms-2" [innerText]="languagePack[language]['back']"></span>
     </button>
     <button
       class="btn btn-success"
-      [disabled]="!configIsValid"
+      [disabled]="!configIsValid || isCreating"
       (click)="createGame()"
     >
-      <i
-        class="bi bi-plus-square"
-      ></i>
+      <i class="bi bi-plus-square"></i>
       <span class="ms-2" [innerText]="languagePack[language]['create']"></span>
     </button>
   </div>
